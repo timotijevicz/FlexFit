@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\emina\\Desktop\\c#\\FlexFit\\FlexFit.csproj": {}
+    "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\FlexFit.csproj": {}
   },
   "projects": {
-    "C:\\Users\\emina\\Desktop\\c#\\FlexFit\\FlexFit.csproj": {
+    "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\FlexFit.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\emina\\Desktop\\c#\\FlexFit\\FlexFit.csproj",
+        "projectUniqueName": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\FlexFit.csproj",
         "projectName": "FlexFit",
-        "projectPath": "C:\\Users\\emina\\Desktop\\c#\\FlexFit\\FlexFit.csproj",
+        "projectPath": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\FlexFit.csproj",
         "packagesPath": "C:\\Users\\emina\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\emina\\Desktop\\c#\\FlexFit\\obj\\",
+        "outputPath": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

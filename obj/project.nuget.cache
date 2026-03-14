@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "xotoO7bL6io=",
+  "dgSpecHash": "q6D2c5fm/48=",
   "success": true,
-  "projectFilePath": "C:\\Users\\emina\\Desktop\\c#\\FlexFit\\FlexFit.csproj",
+  "projectFilePath": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\FlexFit.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\emina\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
     "C:\\Users\\emina\\.nuget\\packages\\microsoft.openapi\\1.6.14\\microsoft.openapi.1.6.14.nupkg.sha512",
