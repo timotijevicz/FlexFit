@@ -1,16 +1,15 @@
-﻿using System.Data;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using FlexFit.Models;
-using Microsoft.Extensions.Configuration;
+using FlexFit.Models; // Ovde je tvoj User model
 using Microsoft.IdentityModel.Tokens;
 
 namespace FlexFit.Token
 {
     public interface ITokenService
     {
-        string CreateToken(string email, string name, Role role);
+        // Sada prima ceo User objekat umesto gomile stringova
+        string CreateToken(User user);
     }
 
     public class TokenService : ITokenService
@@ -22,13 +21,14 @@ namespace FlexFit.Token
             _config = config;
         }
 
-        public string CreateToken(string email, string name, Role role)
+        public string CreateToken(User user)
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Email, email),
-                new Claim(ClaimTypes.Name, name),
-                new Claim(ClaimTypes.Role, role.ToString())
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
+                new Claim(ClaimTypes.Role, user.Role.ToString())
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));

@@ -1,14 +1,10 @@
 ﻿namespace FlexFit.Models
 {
-    public class Employee 
+    public class Employee : User
     {
         public int Id { get; set; }
 
-        public string FirstName { get; set; }
-
-        public string LastName { get; set; }
-
-        public string Address { get; set; }
+    
 
         public string License { get; set; }
 

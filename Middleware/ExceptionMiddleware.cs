@@ -16,28 +16,19 @@ namespace FlexFit.Middleware
 
         public async Task InvokeAsync(HttpContext context)
         {
-            try
-            {
-                await _next(context);
-            }
+            try { await _next(context); }
             catch (Exception ex)
             {
-                // Logovanje u konzolu (ili MongoDB kasnije)
-                Console.WriteLine($"Exception: {ex.Message}");
-
-                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                context.Response.ContentType = "application/json";
-
-                var response = new
+                Console.WriteLine($"Greška: {ex.Message}");
+                context.Response.StatusCode = 500;
+                await context.Response.WriteAsJsonAsync(new
                 {
-                    StatusCode = context.Response.StatusCode,
-                    Message = "Došlo je do greške na serveru.",
+                    Error = "Server Error",
                     Details = ex.Message
-                };
-
-                var json = JsonSerializer.Serialize(response);
-                await context.Response.WriteAsync(json);
+                });
             }
-        }
+        
+    }
+    
     }
 }

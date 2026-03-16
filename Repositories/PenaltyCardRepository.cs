@@ -1,6 +1,6 @@
 ﻿using FlexFit.Data;
 using FlexFit.Models;
-using FlexFit.Repositoires.Interfaces;
+using FlexFit.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace FlexFit.Repositories
@@ -13,7 +13,12 @@ namespace FlexFit.Repositories
         {
             _context = context;
         }
-
+        public async Task<bool> HasRecentPenaltyAsync(int memberId, int hours)
+        {
+            var threshold = DateTime.Now.AddHours(-hours);
+            return await _context.PenaltyCards
+                .AnyAsync(p => p.MemberId == memberId && p.Date >= threshold);
+        }
         public async Task<PenaltyCard> GetByIdAsync(int id) =>
             await _context.PenaltyCards
                 .Include(p => p.Member)

@@ -2,8 +2,6 @@
 using FlexFit.Repositories;
 using FlexFit.Repositories.Interfaces;
 using FlexFit.Repositoires;
-using FlexFit.Repositoires.Interfaces;
-
 namespace FlexFit.UnitOfWorkLayer
 {
     public class UnitOfWork : IUnitOfWork

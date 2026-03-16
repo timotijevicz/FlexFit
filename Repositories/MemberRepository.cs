@@ -1,6 +1,6 @@
 ﻿using FlexFit.Data;
 using FlexFit.Models;
-using FlexFit.Repositoires.Interfaces;
+using FlexFit.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace FlexFit.Repositories
@@ -14,6 +14,11 @@ namespace FlexFit.Repositories
             _context = context;
         }
 
+        public async Task<Member> GetByEmailAsync(string email) =>
+    await _context.Members
+        .Include(m => m.Reservations)
+        .Include(m => m.PenaltyPointHistory)
+        .FirstOrDefaultAsync(m => m.Email == email);
         public async Task<Member> GetByIdAsync(int id) =>
             await _context.Members
                 .Include(m => m.Reservations)

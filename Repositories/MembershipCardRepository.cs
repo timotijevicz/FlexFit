@@ -1,6 +1,6 @@
 ﻿using FlexFit.Data;
 using FlexFit.Models;
-using FlexFit.Repositoires.Interfaces;
+using FlexFit.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace FlexFit.Repositories
@@ -13,7 +13,10 @@ namespace FlexFit.Repositories
         {
             _context = context;
         }
-
+        public async Task<MembershipCard> GetByCardNumberAsync(string cardNumber) =>
+    await _context.MembershipCards
+        .Include(c => c.Member)
+        .FirstOrDefaultAsync(c => c.CardNumber == cardNumber);
         public async Task<MembershipCard> GetByIdAsync(int id) =>
             await _context.MembershipCards
                 .Include(c => c.Member)

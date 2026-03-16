@@ -22,39 +22,7 @@ namespace FlexFit.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("FlexFit.Models.Employee", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("EmployeeType")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("License")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Employees");
-                });
-
-            modelBuilder.Entity("FlexFit.Models.FitnessObject", b =>
+            modelBuilder.Entity("FitnessObject", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -86,38 +54,6 @@ namespace FlexFit.Migrations
                     b.ToTable("FitnessObjects");
                 });
 
-            modelBuilder.Entity("FlexFit.Models.Member", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("JMBG")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("PenaltyPoints")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Members");
-                });
-
             modelBuilder.Entity("FlexFit.Models.MembershipCard", b =>
                 {
                     b.Property<int>("Id")
@@ -126,24 +62,27 @@ namespace FlexFit.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("CardNumber")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("CardType")
                         .HasColumnType("integer");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(21)
-                        .HasColumnType("character varying(21)");
 
                     b.Property<int>("MemberId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MemberId");
+                    b.HasIndex("CardNumber")
+                        .IsUnique();
+
+                    b.HasIndex("MemberId")
+                        .IsUnique();
 
                     b.ToTable("MembershipCards");
 
-                    b.HasDiscriminator().HasValue("MembershipCard");
+                    b.HasDiscriminator<int>("CardType");
 
                     b.UseTphMappingStrategy();
                 });
@@ -268,6 +207,51 @@ namespace FlexFit.Migrations
                     b.ToTable("Resources");
                 });
 
+            modelBuilder.Entity("FlexFit.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserType")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("character varying(8)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+
+                    b.HasDiscriminator<string>("UserType").HasValue("User");
+
+                    b.UseTphMappingStrategy();
+                });
+
             modelBuilder.Entity("FlexFit.Models.DailyCard", b =>
                 {
                     b.HasBaseType("FlexFit.Models.MembershipCard");
@@ -287,16 +271,12 @@ namespace FlexFit.Migrations
 
                     b.HasIndex("FitnessObjectId");
 
-                    b.HasDiscriminator().HasValue("DailyCard");
+                    b.HasDiscriminator().HasValue(0);
                 });
 
             modelBuilder.Entity("FlexFit.Models.SubscriptionCard", b =>
                 {
                     b.HasBaseType("FlexFit.Models.MembershipCard");
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<bool>("PersonalTrainer")
                         .HasColumnType("boolean");
@@ -307,14 +287,42 @@ namespace FlexFit.Migrations
                     b.Property<DateTime>("ValidTo")
                         .HasColumnType("timestamp with time zone");
 
-                    b.HasDiscriminator().HasValue("SubscriptionCard");
+                    b.HasDiscriminator().HasValue(1);
+                });
+
+            modelBuilder.Entity("FlexFit.Models.Employee", b =>
+                {
+                    b.HasBaseType("FlexFit.Models.User");
+
+                    b.Property<int>("EmployeeType")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("License")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasDiscriminator().HasValue("Employee");
+                });
+
+            modelBuilder.Entity("FlexFit.Models.Member", b =>
+                {
+                    b.HasBaseType("FlexFit.Models.User");
+
+                    b.Property<string>("JMBG")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("PenaltyPoints")
+                        .HasColumnType("integer");
+
+                    b.HasDiscriminator().HasValue("Member");
                 });
 
             modelBuilder.Entity("FlexFit.Models.MembershipCard", b =>
                 {
                     b.HasOne("FlexFit.Models.Member", "Member")
-                        .WithMany()
-                        .HasForeignKey("MemberId")
+                        .WithOne("ActiveCard")
+                        .HasForeignKey("FlexFit.Models.MembershipCard", "MemberId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -323,14 +331,14 @@ namespace FlexFit.Migrations
 
             modelBuilder.Entity("FlexFit.Models.PenaltyCard", b =>
                 {
-                    b.HasOne("FlexFit.Models.FitnessObject", "FitnessObject")
+                    b.HasOne("FitnessObject", "FitnessObject")
                         .WithMany()
                         .HasForeignKey("FitnessObjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("FlexFit.Models.Member", "Member")
-                        .WithMany()
+                        .WithMany("PenaltyCards")
                         .HasForeignKey("MemberId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -372,7 +380,7 @@ namespace FlexFit.Migrations
 
             modelBuilder.Entity("FlexFit.Models.Resource", b =>
                 {
-                    b.HasOne("FlexFit.Models.FitnessObject", "FitnessObject")
+                    b.HasOne("FitnessObject", "FitnessObject")
                         .WithMany("Resources")
                         .HasForeignKey("FitnessObjectId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -383,7 +391,7 @@ namespace FlexFit.Migrations
 
             modelBuilder.Entity("FlexFit.Models.DailyCard", b =>
                 {
-                    b.HasOne("FlexFit.Models.FitnessObject", "FitnessObject")
+                    b.HasOne("FitnessObject", "FitnessObject")
                         .WithMany()
                         .HasForeignKey("FitnessObjectId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -392,13 +400,18 @@ namespace FlexFit.Migrations
                     b.Navigation("FitnessObject");
                 });
 
-            modelBuilder.Entity("FlexFit.Models.FitnessObject", b =>
+            modelBuilder.Entity("FitnessObject", b =>
                 {
                     b.Navigation("Resources");
                 });
 
             modelBuilder.Entity("FlexFit.Models.Member", b =>
                 {
+                    b.Navigation("ActiveCard")
+                        .IsRequired();
+
+                    b.Navigation("PenaltyCards");
+
                     b.Navigation("PenaltyPointHistory");
 
                     b.Navigation("Reservations");

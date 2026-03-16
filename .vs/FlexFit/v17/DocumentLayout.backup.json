@@ -1,7 +1,56 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{30F5444C-F0DE-4477-AF4A-FD0157BD50CC}|FlexFit.csproj|c:\\users\\emina\\desktop\\flex\\flexfit\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{30F5444C-F0DE-4477-AF4A-FD0157BD50CC}|FlexFit.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{30F5444C-F0DE-4477-AF4A-FD0157BD50CC}|FlexFit.csproj|c:\\users\\emina\\desktop\\flex\\flexfit\\application\\handlers\\processentryhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{30F5444C-F0DE-4477-AF4A-FD0157BD50CC}|FlexFit.csproj|solutionrelative:application\\handlers\\processentryhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{30F5444C-F0DE-4477-AF4A-FD0157BD50CC}|FlexFit.csproj|c:\\users\\emina\\desktop\\flex\\flexfit\\application\\handlers\\processentry.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{30F5444C-F0DE-4477-AF4A-FD0157BD50CC}|FlexFit.csproj|solutionrelative:application\\handlers\\processentry.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{30F5444C-F0DE-4477-AF4A-FD0157BD50CC}|FlexFit.csproj|c:\\users\\emina\\desktop\\flex\\flexfit\\mongomodels\\repositories\\entrylogrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{30F5444C-F0DE-4477-AF4A-FD0157BD50CC}|FlexFit.csproj|solutionrelative:mongomodels\\repositories\\entrylogrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{30F5444C-F0DE-4477-AF4A-FD0157BD50CC}|FlexFit.csproj|c:\\users\\emina\\desktop\\flex\\flexfit\\mongomodels\\models\\entrylog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{30F5444C-F0DE-4477-AF4A-FD0157BD50CC}|FlexFit.csproj|solutionrelative:mongomodels\\models\\entrylog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{30F5444C-F0DE-4477-AF4A-FD0157BD50CC}|FlexFit.csproj|c:\\users\\emina\\desktop\\flex\\flexfit\\controllers\\entrycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{30F5444C-F0DE-4477-AF4A-FD0157BD50CC}|FlexFit.csproj|solutionrelative:controllers\\entrycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\emina\\Desktop\\flex\\FlexFit\\Migrations\\20260316182853_up.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Migrations\\20260316182853_up.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{30F5444C-F0DE-4477-AF4A-FD0157BD50CC}|FlexFit.csproj|c:\\users\\emina\\desktop\\flex\\flexfit\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{30F5444C-F0DE-4477-AF4A-FD0157BD50CC}|FlexFit.csproj|solutionrelative:data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{30F5444C-F0DE-4477-AF4A-FD0157BD50CC}|FlexFit.csproj|c:\\users\\emina\\desktop\\flex\\flexfit\\models\\member.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{30F5444C-F0DE-4477-AF4A-FD0157BD50CC}|FlexFit.csproj|solutionrelative:models\\member.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{30F5444C-F0DE-4477-AF4A-FD0157BD50CC}|FlexFit.csproj|c:\\users\\emina\\desktop\\flex\\flexfit\\migrations\\20260316182337_update.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{30F5444C-F0DE-4477-AF4A-FD0157BD50CC}|FlexFit.csproj|solutionrelative:migrations\\20260316182337_update.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{30F5444C-F0DE-4477-AF4A-FD0157BD50CC}|FlexFit.csproj|c:\\users\\emina\\desktop\\flex\\flexfit\\repositories\\employeerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{30F5444C-F0DE-4477-AF4A-FD0157BD50CC}|FlexFit.csproj|solutionrelative:repositories\\employeerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{30F5444C-F0DE-4477-AF4A-FD0157BD50CC}|FlexFit.csproj|c:\\users\\emina\\desktop\\flex\\flexfit\\repositories\\interfaces\\iemployeerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{30F5444C-F0DE-4477-AF4A-FD0157BD50CC}|FlexFit.csproj|solutionrelative:repositories\\interfaces\\iemployeerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,8 +58,164 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 2,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "EntryLog.cs",
+              "DocumentMoniker": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\MongoModels\\Models\\EntryLog.cs",
+              "RelativeDocumentMoniker": "MongoModels\\Models\\EntryLog.cs",
+              "ToolTip": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\MongoModels\\Models\\EntryLog.cs",
+              "RelativeToolTip": "MongoModels\\Models\\EntryLog.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-16T18:36:53.681Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "EntryLogRepository.cs",
+              "DocumentMoniker": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\MongoModels\\Repositories\\EntryLogRepository.cs",
+              "RelativeDocumentMoniker": "MongoModels\\Repositories\\EntryLogRepository.cs",
+              "ToolTip": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\MongoModels\\Repositories\\EntryLogRepository.cs",
+              "RelativeToolTip": "MongoModels\\Repositories\\EntryLogRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-16T18:36:45.151Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\Program.cs*",
+              "RelativeToolTip": "Program.cs*",
+              "ViewState": "AgIAADoAAAAAAAAAAAAQwEcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-16T18:35:18.237Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "EntryController.cs",
+              "DocumentMoniker": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\Controllers\\EntryController.cs",
+              "RelativeDocumentMoniker": "Controllers\\EntryController.cs",
+              "ToolTip": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\Controllers\\EntryController.cs*",
+              "RelativeToolTip": "Controllers\\EntryController.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-16T18:35:00.762Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ProcessEntry.cs",
+              "DocumentMoniker": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\Application\\Handlers\\ProcessEntry.cs",
+              "RelativeDocumentMoniker": "Application\\Handlers\\ProcessEntry.cs",
+              "ToolTip": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\Application\\Handlers\\ProcessEntry.cs*",
+              "RelativeToolTip": "Application\\Handlers\\ProcessEntry.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-16T18:34:30.354Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ProcessEntryHandler.cs",
+              "DocumentMoniker": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\Application\\Handlers\\ProcessEntryHandler.cs",
+              "RelativeDocumentMoniker": "Application\\Handlers\\ProcessEntryHandler.cs",
+              "ToolTip": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\Application\\Handlers\\ProcessEntryHandler.cs*",
+              "RelativeToolTip": "Application\\Handlers\\ProcessEntryHandler.cs*",
+              "ViewState": "AgIAADwAAAAAAAAAAAAYwEsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-16T18:32:03.543Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "20260316182853_up.cs",
+              "DocumentMoniker": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\Migrations\\20260316182853_up.cs",
+              "RelativeDocumentMoniker": "Migrations\\20260316182853_up.cs",
+              "ToolTip": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\Migrations\\20260316182853_up.cs",
+              "RelativeToolTip": "Migrations\\20260316182853_up.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-16T18:28:53.716Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Member.cs",
+              "DocumentMoniker": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\Models\\Member.cs",
+              "RelativeDocumentMoniker": "Models\\Member.cs",
+              "ToolTip": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\Models\\Member.cs",
+              "RelativeToolTip": "Models\\Member.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-16T18:27:42.565Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\Data\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "Data\\AppDbContext.cs",
+              "ToolTip": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\Data\\AppDbContext.cs",
+              "RelativeToolTip": "Data\\AppDbContext.cs",
+              "ViewState": "AgIAABUAAAAAAAAAAAAwwBUAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-16T18:24:49.52Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "20260316182337_update.cs",
+              "DocumentMoniker": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\Migrations\\20260316182337_update.cs",
+              "RelativeDocumentMoniker": "Migrations\\20260316182337_update.cs",
+              "ToolTip": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\Migrations\\20260316182337_update.cs",
+              "RelativeToolTip": "Migrations\\20260316182337_update.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-16T18:23:38.15Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "IEmployeeRepository.cs",
+              "DocumentMoniker": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\Repositories\\Interfaces\\IEmployeeRepository.cs",
+              "RelativeDocumentMoniker": "Repositories\\Interfaces\\IEmployeeRepository.cs",
+              "ToolTip": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\Repositories\\Interfaces\\IEmployeeRepository.cs",
+              "RelativeToolTip": "Repositories\\Interfaces\\IEmployeeRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-16T18:20:28.84Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "EmployeeRepository.cs",
+              "DocumentMoniker": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\Repositories\\EmployeeRepository.cs",
+              "RelativeDocumentMoniker": "Repositories\\EmployeeRepository.cs",
+              "ToolTip": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\Repositories\\EmployeeRepository.cs",
+              "RelativeToolTip": "Repositories\\EmployeeRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-16T18:19:52.687Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"

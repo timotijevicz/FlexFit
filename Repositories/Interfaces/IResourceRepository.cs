@@ -1,6 +1,6 @@
 ﻿using FlexFit.Models;
 
-namespace FlexFit.Repositoires.Interfaces
+namespace FlexFit.Repositories.Interfaces
 {
     public interface IResourceRepository
     {

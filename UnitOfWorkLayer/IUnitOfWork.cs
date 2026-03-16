@@ -1,5 +1,4 @@
 ﻿
-using FlexFit.Repositoires.Interfaces;
 using FlexFit.Repositories.Interfaces;
 
 namespace FlexFit.UnitOfWorkLayer

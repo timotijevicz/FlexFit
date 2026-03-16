@@ -1,6 +1,6 @@
 ﻿using FlexFit.Data;
 using FlexFit.Models;
-using FlexFit.Repositoires.Interfaces;
+using FlexFit.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace FlexFit.Repositories
@@ -16,6 +16,10 @@ namespace FlexFit.Repositories
 
         public async Task<Employee> GetByIdAsync(int id) =>
             await _context.Employees.FirstOrDefaultAsync(e => e.Id == id);
+
+        // Dodata metoda u tvom stilu
+        public async Task<Employee> GetByEmailAsync(string email) =>
+            await _context.Employees.FirstOrDefaultAsync(e => e.Email == email);
 
         public async Task<IEnumerable<Employee>> GetAllAsync() =>
             await _context.Employees.ToListAsync();

@@ -27,45 +27,30 @@ namespace FlexFit.Middleware
 
         public async Task InvokeAsync(HttpContext context)
         {
-            // Scoped servise uzimamo ovde po request-u
-            var _entryLogRepository = context.RequestServices.GetRequiredService<EntryLogRepository>();
-            var _violationRepository = context.RequestServices.GetRequiredService<RateLimitViolationRepository>();
+            var path = context.Request.Path.ToString().ToLower();
+            if (!_limits.TryGetValue(path, out var limit)) { await _next(context); return; }
 
             var ip = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
-            var path = context.Request.Path.ToString().ToLower();
+            var key = $"{ip}:{path}";
 
-            // Provera da li postoji limit za ovu rutu
-            if (_limits.TryGetValue(path, out var limitInfo))
+            // GetOrAdd skraćuje kod - uzima listu ili pravi novu u jednoj liniji
+            var list = RequestLog.GetOrAdd(key, _ => new List<DateTime>());
+
+            lock (list)
             {
-                var now = DateTime.UtcNow;
-
-                var key = $"{ip}:{path}";
-                if (!RequestLog.ContainsKey(key))
-                    RequestLog[key] = new List<DateTime>();
-
-                // Očisti stare zapise
-                RequestLog[key] = RequestLog[key].Where(t => now - t < limitInfo.Period).ToList();
-
-                if (RequestLog[key].Count >= limitInfo.Limit)
+                list.RemoveAll(t => DateTime.UtcNow - t >= limit.Period);
+                if (list.Count >= limit.Limit)
                 {
-                    // Logovanje u MongoDB
-                    await _violationRepository.AddAsync(new RateLimitViolation
-                    {
-                        IpAddress = ip,
-                        Route = path,
-                        Timestamp = now
-                    });
+                    // Logovanje u MongoDB (Fire-and-forget)
+                    _ = context.RequestServices.GetRequiredService<RateLimitViolationRepository>()
+                        .AddAsync(new RateLimitViolation { IpAddress = ip, Route = path, Timestamp = DateTime.UtcNow });
 
                     context.Response.StatusCode = 429;
-                    context.Response.Headers["Retry-After"] = limitInfo.Period.TotalSeconds.ToString();
-                    await context.Response.WriteAsync("Too Many Requests. Probajte kasnije.");
+                    context.Response.WriteAsync("Prebrzo skenirate! Sačekajte.").Wait();
                     return;
                 }
-
-                RequestLog[key].Add(now);
+                list.Add(DateTime.UtcNow);
             }
-
-            // Nastavi dalje u pipeline
             await _next(context);
         }
     }

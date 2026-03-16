@@ -1,14 +1,14 @@
+// ... tvoji existing usings ...
+using System.Reflection;
 using System.Text;
 using FlexFit.Data;
 using FlexFit.Middleware;
 using FlexFit.MongoModels.Repositories;
-using FlexFit.Repositoires;
-using FlexFit.Repositoires.Interfaces;
-using FlexFit.Repositories;
-using FlexFit.Repositories.Interfaces;
 using FlexFit.Token;
 using FlexFit.UnitOfWorkLayer;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -21,40 +21,27 @@ namespace FlexFit
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // PostgreSQL
+            // 1. Baze (PostgreSQL & MongoDB)
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            // Repozitorijumi
-            builder.Services.AddScoped<IMemberRepository, MemberRepository>();
-            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-            builder.Services.AddScoped<IFitnessObjectRepository, FitnessObjectRepository>();
-            builder.Services.AddScoped<IResourceRepository, ResourceRepository>();
-            builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
-            builder.Services.AddScoped<IPenaltyCardRepository, PenaltyCardRepository>();
-            builder.Services.AddScoped<IPenaltyPointRepository, PenaltyPointRepository>();
-            builder.Services.AddScoped<IMembershipCardRepository, MembershipCardRepository>();
-
-            // UnitOfWork
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-            // MongoDB
             builder.Services.AddSingleton<MongoDbContext>();
+
+            // 2. Registracija MediatR-a (Ovo ti je klju?no za Handler-e)
+            builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+
+            // 3. UnitOfWork i Repozitorijumi
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            // Napomena: Pošto UnitOfWork inicijalizuje repozitorijume u konstruktoru, 
+            // tehni?ki ne moraš svaki repo posebno registrovati, ali nije greška ako stoje.
             builder.Services.AddScoped<EntryLogRepository>();
-            builder.Services.AddScoped<IncidentRepository>();
             builder.Services.AddScoped<RateLimitViolationRepository>();
 
-            // JWT Token
-            builder.Services.AddScoped<ITokenService, TokenService>();
-
-            // Controllers
-            builder.Services.AddControllers();
-
-            // Authentication
+            // 4. Autentifikacija (JWT + Google)
             builder.Services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
             })
             .AddJwtBearer(options =>
             {
@@ -70,23 +57,31 @@ namespace FlexFit
                         Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
                 };
             })
+            .AddCookie() // OBAVEZNO ZA GOOGLE LOGIN
             .AddGoogle(googleOptions =>
             {
                 googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
                 googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
-                googleOptions.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             });
 
-            // Swagger
+            builder.Services.AddScoped<ITokenService, TokenService>();
+            builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+         
 
+            builder.Services.AddSingleton<MongoDbContext>();
+            builder.Services.AddScoped<EntryLogRepository>();
+            builder.Services.AddScoped<IncidentRepository>();
+            builder.Services.AddScoped<RateLimitViolationRepository>();
+
+            // Registracija MediatR-a
+            builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
             var app = builder.Build();
 
-            // Middleware
-            app.UseRouting();
+            // 5. Middleware redosled (Ovo je važno!)
+            // ExceptionMiddleware ide prvi da uhvati SVE greške
             app.UseMiddleware<ExceptionMiddleware>();
-            app.UseMiddleware<SmartThrottlingMiddleware>();
 
             if (app.Environment.IsDevelopment())
             {
@@ -96,10 +91,14 @@ namespace FlexFit
 
             app.UseHttpsRedirection();
 
+            app.UseRouting(); // Routing ide pre Throttlinga i Autentifikacije
+
+            // Throttling proverava brzinu pre nego što trošimo resurse na login
+            app.UseMiddleware<SmartThrottlingMiddleware>();
+
             app.UseAuthentication();
             app.UseAuthorization();
 
-            // Map controllers
             app.MapControllers();
 
             app.Run();

@@ -1,6 +1,6 @@
 ﻿using FlexFit.Data;
 using FlexFit.Models;
-using FlexFit.Repositoires.Interfaces;
+using FlexFit.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace FlexFit.Repositories
