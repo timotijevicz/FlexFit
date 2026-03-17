@@ -30,11 +30,8 @@ namespace FlexFit.Data
                 .HasValue<Member>("Member")
                 .HasValue<Employee>("Employee");
 
-            // CARD TPH
-            modelBuilder.Entity<MembershipCard>()
-      .HasDiscriminator<CardType>("CardType")
-      .HasValue<DailyCard>(CardType.Daily)
-      .HasValue<SubscriptionCard>(CardType.Subscription);
+           
+           
 
             modelBuilder.Entity<Member>()
         .HasMany(m => m.SubscriptionCards)
