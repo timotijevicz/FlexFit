@@ -9,5 +9,6 @@ public class FitnessObject
     public int Capacity { get; set; }
     public string WorkingHours { get; set; }
     public ICollection<Resource> Resources { get; set; }
+    public virtual ICollection<DailyCard> DailyCards { get; set; } = new List<DailyCard>();
 }
 

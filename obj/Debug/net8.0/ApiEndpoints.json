@@ -1,15 +1,15 @@
 [
   {
     "ContainingType": "FlexFit.Controllers.AdminController",
-    "Method": "CreateFitnessObject",
-    "RelativePath": "api/admin/fitness-object",
+    "Method": "CreateDailyCard",
+    "RelativePath": "api/Admin/create-daily-card",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "obj",
-        "Type": "FlexFit.Models.FitnessObject",
+        "Name": "dto",
+        "Type": "FlexFit.Application.DTOs.CreateDailyCardDto",
         "IsRequired": true
       }
     ],
@@ -17,15 +17,15 @@
   },
   {
     "ContainingType": "FlexFit.Controllers.AdminController",
-    "Method": "GetFitnessObject",
-    "RelativePath": "api/admin/fitness-object/{id}",
-    "HttpMethod": "GET",
+    "Method": "CreateFitnessObject",
+    "RelativePath": "api/Admin/create-fitness-object",
+    "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "id",
-        "Type": "System.Int32",
+        "Name": "dto",
+        "Type": "FlexFit.Application.DTOs.CreateFitnessObjectDto",
         "IsRequired": true
       }
     ],
@@ -33,20 +33,15 @@
   },
   {
     "ContainingType": "FlexFit.Controllers.AdminController",
-    "Method": "UpdateFitnessObject",
-    "RelativePath": "api/admin/fitness-object/{id}",
-    "HttpMethod": "PUT",
+    "Method": "CreateSubscriptionCard",
+    "RelativePath": "api/Admin/create-subscription-card",
+    "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "obj",
-        "Type": "FlexFit.Models.FitnessObject",
+        "Name": "dto",
+        "Type": "FlexFit.Application.DTOs.CreateSubscriptionCardDto",
         "IsRequired": true
       }
     ],
@@ -55,7 +50,7 @@
   {
     "ContainingType": "FlexFit.Controllers.AdminController",
     "Method": "DeleteFitnessObject",
-    "RelativePath": "api/admin/fitness-object/{id}",
+    "RelativePath": "api/Admin/delete-fitness-object/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -69,36 +64,15 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "EmployeeController",
-    "Method": "ScanCard",
-    "RelativePath": "api/employee/scan",
-    "HttpMethod": "POST",
+    "ContainingType": "FlexFit.Controllers.AdminController",
+    "Method": "DeleteMembershipCard",
+    "RelativePath": "api/Admin/delete-membership-card/{cardNumber}",
+    "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "memberId",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "fitnessId",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "MemberController",
-    "Method": "ActivateCard",
-    "RelativePath": "api/member/activate-card",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "cardCode",
+        "Name": "cardNumber",
         "Type": "System.String",
         "IsRequired": true
       }
@@ -106,32 +80,64 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "MemberController",
-    "Method": "CheckAvailability",
-    "RelativePath": "api/member/check-availability",
-    "HttpMethod": "GET",
+    "ContainingType": "FlexFit.Controllers.AdminController",
+    "Method": "UpdateFitnessObject",
+    "RelativePath": "api/Admin/update-fitness-object",
+    "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "fitnessId",
-        "Type": "System.Int32",
-        "IsRequired": false
+        "Name": "dto",
+        "Type": "FlexFit.Application.DTOs.UpdateFitnessObjectDto",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "MemberController",
-    "Method": "GetStatus",
-    "RelativePath": "api/member/status/{memberId}",
-    "HttpMethod": "GET",
+    "ContainingType": "FlexFit.Controllers.AuthController",
+    "Method": "Login",
+    "RelativePath": "api/Auth/login",
+    "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "memberId",
-        "Type": "System.Int32",
+        "Name": "loginDto",
+        "Type": "FlexFit.Application.DTOs.LoginDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FlexFit.Controllers.AuthController",
+    "Method": "RegisterEmployee",
+    "RelativePath": "api/Auth/register-employee",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "FlexFit.Application.DTOs.EmployeeRegistrationDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FlexFit.Controllers.AuthController",
+    "Method": "RegisterMember",
+    "RelativePath": "api/Auth/register-member",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "FlexFit.Application.DTOs.MemberRegistrationDto",
         "IsRequired": true
       }
     ],

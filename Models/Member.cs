@@ -9,7 +9,10 @@
         public ICollection<PenaltyPoint> PenaltyPointHistory { get; set; }
         public ICollection<PenaltyCard> PenaltyCards { get; set; }
 
-        // DODAJ OVO: Ovo je veza sa karticom (koja je Daily ili Subscription)
-        public MembershipCard ActiveCard { get; set; }
+        // SAMO Subscription kartica je obavezna pri registraciji
+        public ICollection<SubscriptionCard> SubscriptionCards { get; set; } = new List<SubscriptionCard>();
+
+        // Dnevne karte su opciono povezane
+        public ICollection<DailyCard> DailyCards { get; set; } = new List<DailyCard>();
     }
 }

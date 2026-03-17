@@ -5,7 +5,7 @@
     "version": "1.0"
   },
   "paths": {
-    "/api/admin/fitness-object": {
+    "/api/Admin/create-daily-card": {
       "post": {
         "tags": [
           "Admin"
@@ -14,17 +14,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/FitnessObject"
+                "$ref": "#/components/schemas/CreateDailyCardDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/FitnessObject"
+                "$ref": "#/components/schemas/CreateDailyCardDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/FitnessObject"
+                "$ref": "#/components/schemas/CreateDailyCardDto"
               }
             }
           }
@@ -36,58 +36,26 @@
         }
       }
     },
-    "/api/admin/fitness-object/{id}": {
-      "get": {
+    "/api/Admin/create-subscription-card": {
+      "post": {
         "tags": [
           "Admin"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "Admin"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
         ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/FitnessObject"
+                "$ref": "#/components/schemas/CreateSubscriptionCardDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/FitnessObject"
+                "$ref": "#/components/schemas/CreateSubscriptionCardDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/FitnessObject"
+                "$ref": "#/components/schemas/CreateSubscriptionCardDto"
               }
             }
           }
@@ -97,7 +65,71 @@
             "description": "OK"
           }
         }
-      },
+      }
+    },
+    "/api/Admin/create-fitness-object": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFitnessObjectDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFitnessObjectDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFitnessObjectDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Admin/update-fitness-object": {
+      "put": {
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateFitnessObjectDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateFitnessObjectDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateFitnessObjectDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Admin/delete-fitness-object/{id}": {
       "delete": {
         "tags": [
           "Admin"
@@ -120,26 +152,18 @@
         }
       }
     },
-    "/api/employee/scan": {
-      "post": {
+    "/api/Admin/delete-membership-card/{cardNumber}": {
+      "delete": {
         "tags": [
-          "Employee"
+          "Admin"
         ],
         "parameters": [
           {
-            "name": "memberId",
-            "in": "query",
+            "name": "cardNumber",
+            "in": "path",
+            "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "fitnessId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           }
         ],
@@ -150,48 +174,26 @@
         }
       }
     },
-    "/api/member/check-availability": {
-      "get": {
-        "tags": [
-          "Member"
-        ],
-        "parameters": [
-          {
-            "name": "fitnessId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/member/activate-card": {
+    "/api/Auth/login": {
       "post": {
         "tags": [
-          "Member"
+          "Auth"
         ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "type": "string"
+                "$ref": "#/components/schemas/LoginDto"
               }
             },
             "text/json": {
               "schema": {
-                "type": "string"
+                "$ref": "#/components/schemas/LoginDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "type": "string"
+                "$ref": "#/components/schemas/LoginDto"
               }
             }
           }
@@ -203,22 +205,61 @@
         }
       }
     },
-    "/api/member/status/{memberId}": {
-      "get": {
+    "/api/Auth/register-member": {
+      "post": {
         "tags": [
-          "Member"
+          "Auth"
         ],
-        "parameters": [
-          {
-            "name": "memberId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MemberRegistrationDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MemberRegistrationDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/MemberRegistrationDto"
+              }
             }
           }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Auth/register-employee": {
+      "post": {
+        "tags": [
+          "Auth"
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmployeeRegistrationDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmployeeRegistrationDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmployeeRegistrationDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -229,7 +270,157 @@
   },
   "components": {
     "schemas": {
-      "FitnessObject": {
+      "CreateDailyCardDto": {
+        "type": "object",
+        "properties": {
+          "cardNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "serialNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "fitnessObjectIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateFitnessObjectDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "capacity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "workingHours": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateSubscriptionCardDto": {
+        "type": "object",
+        "properties": {
+          "cardNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "personalTrainer": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EmployeeRegistrationDto": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          },
+          "license": {
+            "type": "string",
+            "nullable": true
+          },
+          "employeeType": {
+            "$ref": "#/components/schemas/EmployeeType"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EmployeeType": {
+        "enum": [
+          0,
+          1
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MemberRegistrationDto": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          },
+          "jmbg": {
+            "type": "string",
+            "nullable": true
+          },
+          "cardNumber": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateFitnessObjectDto": {
         "type": "object",
         "properties": {
           "id": {
@@ -255,69 +446,23 @@
           "workingHours": {
             "type": "string",
             "nullable": true
-          },
-          "resources": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Resource"
-            },
-            "nullable": true
           }
         },
         "additionalProperties": false
-      },
-      "Resource": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "type": {
-            "$ref": "#/components/schemas/ResourceType"
-          },
-          "status": {
-            "$ref": "#/components/schemas/ResourceStatus"
-          },
-          "floor": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "isPremium": {
-            "type": "boolean"
-          },
-          "premiumFee": {
-            "type": "number",
-            "format": "double"
-          },
-          "fitnessObjectId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "fitnessObject": {
-            "$ref": "#/components/schemas/FitnessObject"
-          }
-        },
-        "additionalProperties": false
-      },
-      "ResourceStatus": {
-        "enum": [
-          0,
-          1,
-          2
-        ],
-        "type": "integer",
-        "format": "int32"
-      },
-      "ResourceType": {
-        "enum": [
-          0,
-          1,
-          2
-        ],
-        "type": "integer",
-        "format": "int32"
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "Unesi token u formatu: Bearer {token}",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
-  }
+  },
+  "security": [
+    {
+      "Bearer": [ ]
+    }
+  ]
 }

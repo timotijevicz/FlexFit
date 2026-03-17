@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-
+using Microsoft.OpenApi.Models;
 namespace FlexFit
 {
     public class Program
@@ -64,11 +64,51 @@ namespace FlexFit
                 googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
             });
 
+
+            
+
             builder.Services.AddScoped<ITokenService, TokenService>();
             builder.Services.AddControllers();
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    policy =>
+                    {
+                        policy.AllowAnyOrigin()
+                              .AllowAnyMethod()
+                              .AllowAnyHeader();
+                    });
+            });
+
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-         
+
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Unesi token u formatu: Bearer {token}"
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+            });
 
             builder.Services.AddSingleton<MongoDbContext>();
             builder.Services.AddScoped<EntryLogRepository>();
@@ -92,7 +132,7 @@ namespace FlexFit
             app.UseHttpsRedirection();
 
             app.UseRouting(); // Routing ide pre Throttlinga i Autentifikacije
-
+            app.UseCors("AllowAll");
             // Throttling proverava brzinu pre nego što trošimo resurse na login
             app.UseMiddleware<SmartThrottlingMiddleware>();
 

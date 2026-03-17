@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "Rc1va0hCWj4=",
+  "dgSpecHash": "JoEvAQeeouk=",
   "success": true,
   "projectFilePath": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\FlexFit.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\emina\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\emina\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
+    "C:\\Users\\emina\\.nuget\\packages\\bcrypt.net-next\\4.1.0\\bcrypt.net-next.4.1.0.nupkg.sha512",
     "C:\\Users\\emina\\.nuget\\packages\\dnsclient\\1.6.1\\dnsclient.1.6.1.nupkg.sha512",
     "C:\\Users\\emina\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\emina\\.nuget\\packages\\mediatr\\14.1.0\\mediatr.14.1.0.nupkg.sha512",

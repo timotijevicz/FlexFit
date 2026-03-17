@@ -19,34 +19,43 @@ namespace FlexFit.Data
         public DbSet<PenaltyPoint> PenaltyPoints { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
 
-      
-            protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // USER NASLEĐIVANJE
+            // USER TPH
             modelBuilder.Entity<User>()
                 .HasDiscriminator<string>("UserType")
+                .HasValue<User>("Admin")
                 .HasValue<Member>("Member")
                 .HasValue<Employee>("Employee");
 
-            // KARTICE NASLEĐIVANJE (Ovo je ključno za tebe)
+            // CARD TPH
             modelBuilder.Entity<MembershipCard>()
-                .HasDiscriminator<CardType>("CardType")
-                .HasValue<DailyCard>(CardType.Daily)
-                .HasValue<SubscriptionCard>(CardType.Subscription);
+      .HasDiscriminator<CardType>("CardType")
+      .HasValue<DailyCard>(CardType.Daily)
+      .HasValue<SubscriptionCard>(CardType.Subscription);
 
-            // Veza 1:1 (Jedan član - jedna aktivna kartica)
             modelBuilder.Entity<Member>()
-                .HasOne(m => m.ActiveCard)
-                .WithOne(c => c.Member)
-                .HasForeignKey<MembershipCard>(c => c.MemberId);
+        .HasMany(m => m.SubscriptionCards)
+        .WithOne(c => c.Member)
+        .HasForeignKey(c => c.MemberId)
+        .OnDelete(DeleteBehavior.Cascade); // jer subscription ide uz registraciju
 
-            // Indeks za skeniranje
+            modelBuilder.Entity<Member>()
+                .HasMany(m => m.DailyCards)
+                .WithOne(c => c.Member)
+                .HasForeignKey(c => c.MemberId)
+                .OnDelete(DeleteBehavior.SetNull); // dnevne karte opciono
+            // UNIQUE
             modelBuilder.Entity<MembershipCard>()
                 .HasIndex(c => c.CardNumber)
                 .IsUnique();
+
+            // MANY-TO-MANY
+            modelBuilder.Entity<DailyCard>()
+                .HasMany(d => d.FitnessObjects)
+                .WithMany(f => f.DailyCards);
         }
     }
-    
 }

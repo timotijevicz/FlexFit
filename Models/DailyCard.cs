@@ -5,7 +5,6 @@
         public string SerialNumber { get; set; }
         public DateTime PurchaseDate { get; set; }
         public TimeSpan PurchaseTime { get; set; }
-        public int FitnessObjectId { get; set; }
-        public FitnessObject FitnessObject { get; set; }
+        public virtual ICollection<FitnessObject> FitnessObjects { get; set; } = new List<FitnessObject>();
     }
 }

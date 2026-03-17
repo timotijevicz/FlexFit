@@ -140,3 +140,4 @@ C:\Users\emina\Desktop\flex\FlexFit\bin\Debug\net8.0\MediatR.dll
 C:\Users\emina\Desktop\flex\FlexFit\bin\Debug\net8.0\MediatR.Contracts.dll
 C:\Users\emina\Desktop\flex\FlexFit\bin\Debug\net8.0\MediatR.Extensions.Microsoft.DependencyInjection.dll
 C:\Users\emina\Desktop\flex\FlexFit\bin\Debug\net8.0\System.Diagnostics.DiagnosticSource.dll
+C:\Users\emina\Desktop\flex\FlexFit\bin\Debug\net8.0\BCrypt.Net-Next.dll

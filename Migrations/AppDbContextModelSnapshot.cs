@@ -22,6 +22,21 @@ namespace FlexFit.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("DailyCardFitnessObject", b =>
+                {
+                    b.Property<int>("DailyCardsId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("FitnessObjectsId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("DailyCardsId", "FitnessObjectsId");
+
+                    b.HasIndex("FitnessObjectsId");
+
+                    b.ToTable("DailyCardFitnessObject");
+                });
+
             modelBuilder.Entity("FitnessObject", b =>
                 {
                     b.Property<int>("Id")
@@ -247,7 +262,7 @@ namespace FlexFit.Migrations
 
                     b.ToTable("Users");
 
-                    b.HasDiscriminator<string>("UserType").HasValue("User");
+                    b.HasDiscriminator<string>("UserType").HasValue("Admin");
 
                     b.UseTphMappingStrategy();
                 });
@@ -255,9 +270,6 @@ namespace FlexFit.Migrations
             modelBuilder.Entity("FlexFit.Models.DailyCard", b =>
                 {
                     b.HasBaseType("FlexFit.Models.MembershipCard");
-
-                    b.Property<int>("FitnessObjectId")
-                        .HasColumnType("integer");
 
                     b.Property<DateTime>("PurchaseDate")
                         .HasColumnType("timestamp with time zone");
@@ -268,8 +280,6 @@ namespace FlexFit.Migrations
                     b.Property<string>("SerialNumber")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.HasIndex("FitnessObjectId");
 
                     b.HasDiscriminator().HasValue(0);
                 });
@@ -316,6 +326,21 @@ namespace FlexFit.Migrations
                         .HasColumnType("integer");
 
                     b.HasDiscriminator().HasValue("Member");
+                });
+
+            modelBuilder.Entity("DailyCardFitnessObject", b =>
+                {
+                    b.HasOne("FlexFit.Models.DailyCard", null)
+                        .WithMany()
+                        .HasForeignKey("DailyCardsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FitnessObject", null)
+                        .WithMany()
+                        .HasForeignKey("FitnessObjectsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("FlexFit.Models.MembershipCard", b =>
@@ -382,17 +407,6 @@ namespace FlexFit.Migrations
                 {
                     b.HasOne("FitnessObject", "FitnessObject")
                         .WithMany("Resources")
-                        .HasForeignKey("FitnessObjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("FitnessObject");
-                });
-
-            modelBuilder.Entity("FlexFit.Models.DailyCard", b =>
-                {
-                    b.HasOne("FitnessObject", "FitnessObject")
-                        .WithMany()
                         .HasForeignKey("FitnessObjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
