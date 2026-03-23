@@ -1,4 +1,3 @@
-// ... tvoji existing usings ...
 using System.Reflection;
 using System.Text;
 using FlexFit.Data;
@@ -13,6 +12,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+
 namespace FlexFit
 {
     public class Program
@@ -21,27 +21,33 @@ namespace FlexFit
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // 1. Baze (PostgreSQL & MongoDB)
+            // PostgreSQL
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+            // MongoDB
             builder.Services.AddSingleton<MongoDbContext>();
 
-            // 2. Registracija MediatR-a (Ovo ti je klju?no za Handler-e)
-            builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
-
-            // 3. UnitOfWork i Repozitorijumi
+            // Unit of Work + repositories
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            // Napomena: Pošto UnitOfWork inicijalizuje repozitorijume u konstruktoru, 
-            // tehni?ki ne moraš svaki repo posebno registrovati, ali nije greška ako stoje.
             builder.Services.AddScoped<EntryLogRepository>();
+            builder.Services.AddScoped<LoginRepository>();
+            builder.Services.AddScoped<IncidentRepository>();
             builder.Services.AddScoped<RateLimitViolationRepository>();
 
-            // 4. Autentifikacija (JWT + Google)
+            // MediatR
+            builder.Services.AddMediatR(cfg =>
+                cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+
+            // Token service
+            builder.Services.AddScoped<ITokenService, TokenService>();
+
+            // Authentication
             builder.Services.AddAuthentication(options =>
             {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
             })
             .AddJwtBearer(options =>
             {
@@ -54,32 +60,32 @@ namespace FlexFit
                     ValidIssuer = builder.Configuration["Jwt:Issuer"],
                     ValidAudience = builder.Configuration["Jwt:Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+                        Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
                 };
             })
-            .AddCookie() // OBAVEZNO ZA GOOGLE LOGIN
+            .AddCookie()
             .AddGoogle(googleOptions =>
             {
-                googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
-                googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+                googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
+                googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
             });
 
-
-            
-
-            builder.Services.AddScoped<ITokenService, TokenService>();
-            builder.Services.AddControllers();
+            // CORS
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("AllowAll",
-                    policy =>
-                    {
-                        policy.AllowAnyOrigin()
-                              .AllowAnyMethod()
-                              .AllowAnyHeader();
-                    });
+                options.AddPolicy("AllowFrontend", policy =>
+                {
+                    policy.WithOrigins("http://localhost:5173", "http://localhost:5174", "http://localhost:5175")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
             });
 
+            // Controllers + Swagger
+            builder.Services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+            });
             builder.Services.AddEndpointsApiExplorer();
 
             builder.Services.AddSwaggerGen(options =>
@@ -95,33 +101,24 @@ namespace FlexFit
                 });
 
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
                 {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            new string[] {}
-        }
-    });
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
             });
 
-            builder.Services.AddSingleton<MongoDbContext>();
-            builder.Services.AddScoped<EntryLogRepository>();
-            builder.Services.AddScoped<LoginRepository>();
-            builder.Services.AddScoped<IncidentRepository>();
-            builder.Services.AddScoped<RateLimitViolationRepository>();
-
-            // Registracija MediatR-a
-            builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
             var app = builder.Build();
 
-            // 5. Middleware redosled (Ovo je važno!)
-            // ExceptionMiddleware ide prvi da uhvati SVE greške
+            // Global exception handler
             app.UseMiddleware<ExceptionMiddleware>();
 
             if (app.Environment.IsDevelopment())
@@ -132,9 +129,11 @@ namespace FlexFit
 
             app.UseHttpsRedirection();
 
-            app.UseRouting(); // Routing ide pre Throttlinga i Autentifikacije
-            app.UseCors("AllowAll");
-            // Throttling proverava brzinu pre nego što trošimo resurse na login
+            app.UseRouting();
+
+            app.UseCors("AllowFrontend");
+
+            // Custom throttling middleware
             app.UseMiddleware<SmartThrottlingMiddleware>();
 
             app.UseAuthentication();

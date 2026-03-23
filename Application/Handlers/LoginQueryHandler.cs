@@ -54,6 +54,19 @@ namespace FlexFit.Application.Handlers
                     return null; 
             }
 
+            if (user is Member member)
+            {
+                var unactivatedCard = await _context.SubscriptionCards
+                    .FirstOrDefaultAsync(c => c.MemberId == member.Id && c.ValidFrom == null, cancellationToken);
+                
+                if (unactivatedCard != null)
+                {
+                    unactivatedCard.ValidFrom = DateTime.UtcNow;
+                    unactivatedCard.ValidTo = DateTime.UtcNow.AddDays(30);
+                    await _context.SaveChangesAsync(cancellationToken);
+                }
+            }
+
             
             var token = _tokenService.CreateToken(user);
 

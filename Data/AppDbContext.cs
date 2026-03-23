@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using FlexFit.Models;
 
 namespace FlexFit.Data
@@ -18,6 +18,7 @@ namespace FlexFit.Data
         public DbSet<PenaltyCard> PenaltyCards { get; set; }
         public DbSet<PenaltyPoint> PenaltyPoints { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
+        public DbSet<TimeSlot> TimeSlots { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

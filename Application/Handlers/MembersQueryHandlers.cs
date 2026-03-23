@@ -3,6 +3,7 @@ using FlexFit.Models;
 using FlexFit.UnitOfWorkLayer;
 using MediatR;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,7 +20,8 @@ namespace FlexFit.Application.Handlers
 
         public async Task<IEnumerable<Member>> Handle(GetAllMembersQuery request, CancellationToken cancellationToken)
         {
-            return await _uow.Members.GetAllAsync();
+            var all = await _uow.Members.GetAllAsync();
+            return all.Where(m => m.Role == FlexFit.Models.Role.Member);
         }
     }
 }

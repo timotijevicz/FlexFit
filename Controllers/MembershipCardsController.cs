@@ -30,5 +30,12 @@ namespace FlexFit.Controllers
             if (result == null) return NotFound();
             return Ok(result);
         }
+
+        [HttpGet("check-code/{code}")]
+        public async Task<IActionResult> CheckCode(string code)
+        {
+            var isUnique = await _mediator.Send(new CheckCardCodeQuery(code));
+            return Ok(new { isUnique = isUnique });
+        }
     }
 }

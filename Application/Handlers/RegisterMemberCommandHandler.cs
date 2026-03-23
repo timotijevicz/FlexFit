@@ -48,8 +48,6 @@ namespace FlexFit.Application.Handlers
             card.MemberId = newMember.Id;
             newMember.SubscriptionCards.Add(subCard);
             
-            subCard.ValidFrom = DateTime.UtcNow;
-            subCard.ValidTo = DateTime.UtcNow.AddDays(30);
             subCard.PersonalTrainer = request.Dto.PersonalTrainer;
             subCard.IsActive = true;
 

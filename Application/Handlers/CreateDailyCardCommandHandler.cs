@@ -18,7 +18,8 @@ namespace FlexFit.Application.Handlers
             var card = new DailyCard
             {
                 CardNumber = request.Dto.CardNumber,
-                PurchaseDate = null,
+                PurchaseDate = DateTime.UtcNow,
+                IsActive = true,
                 FitnessObjects = new List<FitnessObject>()
             };
 

@@ -1,0 +1,25 @@
+# Visual Studio privremeni fajlovi
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build output
+bin/
+obj/
+Debug/
+Release/
+
+# Paket menadžeri
+packages/
+*.nupkg
+
+# Test rezultati
+TestResults/
+
+# Konfiguracije i logovi
+*.log
+*.tlog
+*.cache
+*.pdb

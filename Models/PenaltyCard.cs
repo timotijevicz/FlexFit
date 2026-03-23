@@ -1,4 +1,4 @@
-﻿namespace FlexFit.Models
+namespace FlexFit.Models
 {
     public class PenaltyCard
     {
@@ -10,5 +10,7 @@
         public DateTime Date { get; set; } // Ovde gledamo onih 12h
         public decimal Price { get; set; }
         public string Reason { get; set; }
+        public bool IsCanceled { get; set; } = false;
+        public string? CancelReason { get; set; }
     }
 }

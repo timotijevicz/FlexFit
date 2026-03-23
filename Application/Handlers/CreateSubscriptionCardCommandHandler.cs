@@ -18,9 +18,11 @@ namespace FlexFit.Application.Handlers
             var card = new SubscriptionCard
             {
                 CardNumber = request.Dto.CardNumber,
-                ValidFrom = DateTime.MinValue, // Default value, will be set when member registers
-                ValidTo = DateTime.MinValue, // Default value, will be set when member registers
-                PersonalTrainer = false,
+                ValidFrom = null,
+                ValidTo = null,
+                PersonalTrainer = request.Dto.PersonalTrainer,
+                MemberId = request.Dto.MemberId,
+                IsActive = true
             };
 
             await _uow.MembershipCards.AddAsync(card);

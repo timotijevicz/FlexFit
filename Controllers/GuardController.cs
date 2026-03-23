@@ -30,5 +30,23 @@ namespace FlexFit.Controllers
 
             return Ok(new { message = "Daily ticket sold successfully." });
         }
+
+        [HttpPost("create-daily-card")]
+        [Authorize(Roles = "Admin,Employee,1,Redar")]
+        public async Task<IActionResult> CreateDailyCard([FromBody] CreateDailyCardDto dto)
+        {
+            var result = await _mediator.Send(new CreateDailyCardCommand(dto));
+            if (!result) return BadRequest(new { message = "Card number already exists or invalid data." });
+            return Ok(new { message = "Daily card created successfully." });
+        }
+
+        [HttpPost("create-subscription-card")]
+        [Authorize(Roles = "Admin,Employee,1,Redar")]
+        public async Task<IActionResult> CreateSubscriptionCard([FromBody] CreateSubscriptionCardDto dto)
+        {
+            var result = await _mediator.Send(new CreateSubscriptionCardCommand(dto));
+            if (!result) return BadRequest(new { message = "Card number already exists or invalid data." });
+            return Ok(new { message = "Subscription card created successfully." });
+        }
     }
 }

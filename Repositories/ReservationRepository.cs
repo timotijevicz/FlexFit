@@ -1,4 +1,4 @@
-﻿using FlexFit.Data;
+using FlexFit.Data;
 using FlexFit.Models;
 using FlexFit.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +24,13 @@ namespace FlexFit.Repositories
             await _context.Reservations
                 .Include(r => r.Member)
                 .Include(r => r.Resource)
+                .ToListAsync();
+
+        public async Task<IEnumerable<Reservation>> FindAsync(System.Linq.Expressions.Expression<Func<Reservation, bool>> predicate) =>
+            await _context.Reservations
+                .Include(r => r.Member)
+                .Include(r => r.Resource)
+                .Where(predicate)
                 .ToListAsync();
 
         public async Task AddAsync(Reservation reservation)

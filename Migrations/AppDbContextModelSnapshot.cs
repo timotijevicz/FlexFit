@@ -112,11 +112,17 @@ namespace FlexFit.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("CancelReason")
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("FitnessObjectId")
                         .HasColumnType("integer");
+
+                    b.Property<bool>("IsCanceled")
+                        .HasColumnType("boolean");
 
                     b.Property<int>("MemberId")
                         .HasColumnType("integer");
@@ -145,12 +151,18 @@ namespace FlexFit.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("CancelReason")
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsCanceled")
+                        .HasColumnType("boolean");
 
                     b.Property<int>("MemberId")
                         .HasColumnType("integer");
@@ -170,7 +182,7 @@ namespace FlexFit.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("EndTime")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("MemberId")
@@ -178,6 +190,9 @@ namespace FlexFit.Migrations
 
                     b.Property<int>("ResourceId")
                         .HasColumnType("integer");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");

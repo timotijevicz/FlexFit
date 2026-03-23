@@ -1,4 +1,4 @@
-﻿using FlexFit.Application.Commands;
+using FlexFit.Application.Commands;
 using FlexFit.Application.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -8,7 +8,6 @@ namespace FlexFit.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Admin")]
     public class AdminController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -18,23 +17,8 @@ namespace FlexFit.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost("create-daily-card")]
-        public async Task<IActionResult> CreateDailyCard([FromBody] CreateDailyCardDto dto)
-        {
-            var result = await _mediator.Send(new CreateDailyCardCommand(dto));
-            if (!result) return BadRequest(new { message = "Card number already exists or invalid data." });
-            return Ok(new { message = "Daily card created successfully." });
-        }
-
-        [HttpPost("create-subscription-card")]
-        public async Task<IActionResult> CreateSubscriptionCard([FromBody] CreateSubscriptionCardDto dto)
-        {
-            var result = await _mediator.Send(new CreateSubscriptionCardCommand(dto));
-            if (!result) return BadRequest(new { message = "Card number already exists or invalid data." });
-            return Ok(new { message = "Subscription card created successfully." });
-        }
-
         [HttpPost("create-fitness-object")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateFitnessObject([FromBody] CreateFitnessObjectDto dto)
         {
             var result = await _mediator.Send(new CreateFitnessObjectCommand(dto));
@@ -42,6 +26,7 @@ namespace FlexFit.Controllers
         }
 
         [HttpPut("update-fitness-object")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateFitnessObject([FromBody] UpdateFitnessObjectDto dto)
         {
             var result = await _mediator.Send(new UpdateFitnessObjectCommand(dto));
@@ -50,6 +35,7 @@ namespace FlexFit.Controllers
         }
 
         [HttpDelete("delete-fitness-object/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteFitnessObject(int id)
         {
             var result = await _mediator.Send(new DeleteFitnessObjectCommand(id));
@@ -58,6 +44,7 @@ namespace FlexFit.Controllers
         }
 
         [HttpDelete("delete-membership-card/{cardNumber}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteMembershipCard(string cardNumber)
         {
             var result = await _mediator.Send(new DeleteMembershipCardCommand(cardNumber));

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "JoEvAQeeouk=",
+  "dgSpecHash": "xtuhDsMiP04=",
   "success": true,
   "projectFilePath": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\FlexFit.csproj",
   "expectedPackageFiles": [
@@ -11,7 +11,6 @@
     "C:\\Users\\emina\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\emina\\.nuget\\packages\\mediatr\\14.1.0\\mediatr.14.1.0.nupkg.sha512",
     "C:\\Users\\emina\\.nuget\\packages\\mediatr.contracts\\2.0.1\\mediatr.contracts.2.0.1.nupkg.sha512",
-    "C:\\Users\\emina\\.nuget\\packages\\mediatr.extensions.microsoft.dependencyinjection\\11.1.0\\mediatr.extensions.microsoft.dependencyinjection.11.1.0.nupkg.sha512",
     "C:\\Users\\emina\\.nuget\\packages\\microsoft.aspnetcore.authentication\\2.3.0\\microsoft.aspnetcore.authentication.2.3.0.nupkg.sha512",
     "C:\\Users\\emina\\.nuget\\packages\\microsoft.aspnetcore.authentication.abstractions\\2.3.0\\microsoft.aspnetcore.authentication.abstractions.2.3.0.nupkg.sha512",
     "C:\\Users\\emina\\.nuget\\packages\\microsoft.aspnetcore.authentication.cookies\\2.3.9\\microsoft.aspnetcore.authentication.cookies.2.3.9.nupkg.sha512",
@@ -124,18 +123,6 @@
       "warningLevel": 1,
       "filePath": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\FlexFit.csproj",
       "libraryId": "Microsoft.EntityFrameworkCore.Design",
-      "targetGraphs": [
-        "net8.0"
-      ]
-    },
-    {
-      "code": "NU1608",
-      "level": "Warning",
-      "message": "Detected package version outside of dependency constraint: MediatR.Extensions.Microsoft.DependencyInjection 11.1.0 requires MediatR (>= 11.0.0 && < 12.0.0) but version MediatR 14.1.0 was resolved.",
-      "projectPath": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\FlexFit.csproj",
-      "warningLevel": 1,
-      "filePath": "C:\\Users\\emina\\Desktop\\flex\\FlexFit\\FlexFit.csproj",
-      "libraryId": "MediatR",
       "targetGraphs": [
         "net8.0"
       ]
