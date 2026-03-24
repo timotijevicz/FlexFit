@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.Security.Claims;
 using FlexFit.Domain.MongoModels.Models;
 using FlexFit.Domain.MongoModels.Repositories;
@@ -27,6 +27,14 @@ namespace FlexFit.Presentation.Middleware
 
         public async Task InvokeAsync(HttpContext context)
         {
+            // Skip throttling for Admin and Employee roles
+            if (context.User.Identity?.IsAuthenticated == true && 
+                (context.User.IsInRole("Admin") || context.User.IsInRole("Employee")))
+            {
+                await _next(context);
+                return;
+            }
+
             var path = context.Request.Path.ToString().ToLower();
             
             // Normalize path for parametrized routes

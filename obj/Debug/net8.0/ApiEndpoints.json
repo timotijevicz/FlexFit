@@ -139,6 +139,22 @@
   },
   {
     "ContainingType": "FlexFit.Presentation.Controllers.EmployeesController",
+    "Method": "Update",
+    "RelativePath": "api/Employees",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "FlexFit.Application.DTOs.UpdateEmployeeDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FlexFit.Presentation.Controllers.EmployeesController",
     "Method": "Delete",
     "RelativePath": "api/Employees/{id}",
     "HttpMethod": "DELETE",

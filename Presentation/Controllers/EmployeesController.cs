@@ -1,4 +1,5 @@
-﻿using FlexFit.Application.Commands;
+using FlexFit.Application.Commands;
+using FlexFit.Application.DTOs;
 using FlexFit.Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,14 @@ namespace FlexFit.Presentation.Controllers
         {
             var result = await _mediator.Send(new GetAllEmployeesQuery());
             return Ok(result);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody] UpdateEmployeeDto dto)
+        {
+            var result = await _mediator.Send(new UpdateEmployeeCommand(dto));
+            if (!result) return NotFound(new { message = "Employee not found." });
+            return Ok(new { message = "Employee updated successfully." });
         }
 
         [HttpDelete("{id}")]
