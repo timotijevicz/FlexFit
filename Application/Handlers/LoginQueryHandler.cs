@@ -7,10 +7,11 @@ using FlexFit.MongoModels.Repositories;
 using FlexFit.Token;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using FlexFit.Application.DTOs;
 
 namespace FlexFit.Application.Handlers
 {
-    public class LoginQueryHandler : IRequestHandler<LoginQuery, string>
+    public class LoginQueryHandler : IRequestHandler<LoginQuery, TokenResponseDto?>
     {
         private readonly AppDbContext _context;
         private readonly ITokenService _tokenService;
@@ -22,7 +23,7 @@ namespace FlexFit.Application.Handlers
             _tokenService = tokenService;
             _loginRepository = loginRepository;
         }
-        public async Task<string> Handle(LoginQuery request, CancellationToken cancellationToken)
+        public async Task<TokenResponseDto?> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == request.LoginDto.Email, cancellationToken);
@@ -68,7 +69,10 @@ namespace FlexFit.Application.Handlers
             }
 
             
-            var token = _tokenService.CreateToken(user);
+            var tokenResponse = _tokenService.CreateToken(user);
+            user.RefreshToken = tokenResponse.RefreshToken;
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+            await _context.SaveChangesAsync(cancellationToken);
 
             var log = new Login
             {
@@ -80,7 +84,7 @@ namespace FlexFit.Application.Handlers
 
             await _loginRepository.AddAsync(log);
 
-            return token;
+            return tokenResponse;
         }
 
     }

@@ -142,11 +142,11 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 
             app.UseCors("AllowFrontend");
 
-            // Custom throttling middleware
-            app.UseMiddleware<SmartThrottlingMiddleware>();
-
             app.UseAuthentication();
             app.UseAuthorization();
+
+            // Custom throttling middleware
+            app.UseMiddleware<SmartThrottlingMiddleware>();
 
             app.MapControllers();
 

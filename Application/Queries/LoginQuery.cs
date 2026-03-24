@@ -3,7 +3,7 @@ using MediatR;
 
 namespace FlexFit.Application.Queries
 {
-    public class LoginQuery : IRequest<string>
+    public class LoginQuery : IRequest<TokenResponseDto?>
     {
         public LoginDto LoginDto { get; set; }
 
