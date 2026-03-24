@@ -1,12 +1,12 @@
-﻿using MediatR;
+using MediatR;
 
 namespace FlexFit.Application.Commands
 {
     public class ProcessNoShowPenaltyCommand : IRequest<bool>
     {
-        public int ReservationId { get; }
+        public string ReservationId { get; }
 
-        public ProcessNoShowPenaltyCommand(int reservationId)
+        public ProcessNoShowPenaltyCommand(string reservationId)
         {
             ReservationId = reservationId;
         }

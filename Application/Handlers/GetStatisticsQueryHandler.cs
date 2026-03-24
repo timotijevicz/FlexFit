@@ -1,4 +1,4 @@
-﻿using FlexFit.Application.Queries;
+using FlexFit.Application.Queries;
 using FlexFit.Infrastructure.UnitOfWorkLayer;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -23,8 +23,8 @@ namespace FlexFit.Application.Handlers
             var subCards = allCards.OfType<FlexFit.Domain.Models.SubscriptionCard>().Count();
             var dailyCards = allCards.OfType<global::DailyCard>().Count();
             
-            var allPenalties = await _uow.PenaltyCards.GetAllAsync();
-            var totalPenaltyRevenue = allPenalties.Where(p => !p.IsCanceled).Sum(p => p.Price);
+            var allPenalties = await _uow.PenaltyLogs.GetAllAsync();
+            var totalPenaltyRevenue = allPenalties.Sum(p => (decimal)(p.Price ?? 0.0));
 
             var activeMembers = await _context.Users.CountAsync(u => u.Role == FlexFit.Domain.Models.Role.Member);
 

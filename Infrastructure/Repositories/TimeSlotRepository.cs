@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,6 +6,7 @@ using FlexFit.Application.DTOs;
 using FlexFit.Infrastructure.Data;
 using FlexFit.Domain.Models;
 using FlexFit.Infrastructure.Repositories.Interfaces;
+using FlexFit.Domain.MongoModels.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace FlexFit.Infrastructure.Repositories
@@ -13,10 +14,12 @@ namespace FlexFit.Infrastructure.Repositories
     public class TimeSlotRepository : ITimeSlotRepository
     {
         private readonly AppDbContext _context;
+        private readonly ReservationLogRepository _mongoRepo;
 
-        public TimeSlotRepository(AppDbContext context)
+        public TimeSlotRepository(AppDbContext context, ReservationLogRepository mongoRepo)
         {
             _context = context;
+            _mongoRepo = mongoRepo;
         }
 
         public async Task<IEnumerable<TimeSlotResultDto>> GetTimeSlotsAsync(int resourceId)
@@ -32,9 +35,10 @@ namespace FlexFit.Infrastructure.Repositories
                 .OrderBy(ts => ts.StartTime)
                 .ToListAsync();
 
-            var reservations = await _context.Reservations
-                .Where(r => r.ResourceId == resourceId && r.Status != FlexFit.Domain.Models.ReservationStatus.NoShow && r.EndTime > dateToQuery)
-                .ToListAsync();
+            var allReservations = await _mongoRepo.GetByResourceIdAsync(resourceId);
+            var reservations = allReservations
+                .Where(r => r.Status != "NoShow" && r.Status != "Canceled" && r.EndTime > dateToQuery)
+                .ToList();
 
             return slots.Select(ts => new TimeSlotResultDto
             {
@@ -101,7 +105,6 @@ namespace FlexFit.Infrastructure.Repositories
             }
             catch (Exception)
             {
-                // Silently ignore generation errors so we at least return what we have
             }
         }
 
@@ -131,7 +134,7 @@ namespace FlexFit.Infrastructure.Repositories
         public async Task<int> CreateTimeSlotAsync(TimeSlotDto dto)
         {
             if (dto.StartTime >= dto.EndTime)
-                throw new ArgumentException("PoÄetno vreme mora biti pre krajnjeg.");
+                throw new ArgumentException("Pocetno vreme mora biti pre krajnjeg.");
 
             var timeSlot = new TimeSlot
             {

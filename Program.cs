@@ -7,6 +7,7 @@ using FlexFit.Infrastructure.Token;
 using FlexFit.Infrastructure.UnitOfWorkLayer;
 using FlexFit.Domain.Interfaces.Repositories;
 using FlexFit.Infrastructure.Repositories;
+using FlexFit.Infrastructure.Repositories.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -42,14 +43,22 @@ namespace FlexFit
             builder.Services.AddScoped<RateLimitViolationRepository>();
             builder.Services.AddScoped<FlexFit.Infrastructure.Repositories.Interfaces.ITimeSlotRepository, FlexFit.Infrastructure.Repositories.TimeSlotRepository>();
             builder.Services.AddScoped<FlexFit.Infrastructure.Repositories.Interfaces.IResourceRepository, FlexFit.Infrastructure.Repositories.ResourceRepository>();
+            builder.Services.AddScoped<ReservationLogRepository>();
+            builder.Services.AddScoped<PenaltyLogRepository>();
+            builder.Services.AddScoped<MembershipLogRepository>();
+            builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
+            builder.Services.AddScoped<IPenaltyCardRepository, PenaltyCardRepository>();
+            builder.Services.AddScoped<IPenaltyPointRepository, PenaltyPointRepository>();
             builder.Services.AddScoped<IMemberGraphRepository, MemberGraphRepository>();
             builder.Services.AddHostedService<FlexFit.Application.Services.ReservationBackgroundService>();
 
 
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-});
+            builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+                });
             // MediatR
             builder.Services.AddMediatR(cfg =>
                 cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
@@ -97,10 +106,6 @@ builder.Services.AddControllers().AddJsonOptions(options =>
             });
 
             // Controllers + Swagger
-            builder.Services.AddControllers().AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
-            });
             builder.Services.AddEndpointsApiExplorer();
 
             builder.Services.AddSwaggerGen(options =>

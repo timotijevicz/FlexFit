@@ -1,4 +1,4 @@
-﻿using FlexFit.Infrastructure.Data;
+using FlexFit.Infrastructure.Data;
 using FlexFit.Domain.Models;
 using FlexFit.Infrastructure.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -16,19 +16,13 @@ namespace FlexFit.Infrastructure.Repositories
 
         public async Task<Member> GetByEmailAsync(string email) =>
     await _context.Members
-        .Include(m => m.Reservations)
-        .Include(m => m.PenaltyPointHistory)
         .FirstOrDefaultAsync(m => m.Email == email);
         public async Task<Member> GetByIdAsync(int id) =>
             await _context.Members
-                .Include(m => m.Reservations)
-                .Include(m => m.PenaltyPointHistory)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
         public async Task<IEnumerable<Member>> GetAllAsync() =>
             await _context.Members
-                .Include(m => m.Reservations)
-                .Include(m => m.PenaltyPointHistory)
                 .ToListAsync();
 
         public async Task AddAsync(Member member)

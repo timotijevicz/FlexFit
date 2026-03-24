@@ -17,7 +17,6 @@ namespace FlexFit.Infrastructure.Repositories
         public async Task<Employee> GetByIdAsync(int id) =>
             await _context.Employees.FirstOrDefaultAsync(e => e.Id == id);
 
-        // Dodata metoda u tvom stilu
         public async Task<Employee> GetByEmailAsync(string email) =>
             await _context.Employees.FirstOrDefaultAsync(e => e.Email == email);
 

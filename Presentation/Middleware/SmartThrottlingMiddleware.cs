@@ -27,22 +27,15 @@ namespace FlexFit.Presentation.Middleware
 
         public async Task InvokeAsync(HttpContext context)
         {
-            // Skip throttling for Admin and Employee roles
-            if (context.User.Identity?.IsAuthenticated == true && 
-                (context.User.IsInRole("Admin") || context.User.IsInRole("Employee")))
+            var user = context.User;
+            if (user.Identity?.IsAuthenticated == true && (user.IsInRole("Admin") || user.IsInRole("Employee")))
             {
                 await _next(context);
                 return;
             }
 
             var path = context.Request.Path.ToString().ToLower();
-            
-            // Normalize path for parametrized routes
-            string normalizedPath = path;
-            if (path.StartsWith("/api/membershipcards/check-code"))
-            {
-                normalizedPath = "/api/membershipcards/check-code";
-            }
+            var normalizedPath = GetNormalizedPath(path);
 
             if (!_limits.TryGetValue(normalizedPath, out var limit))
             {
@@ -51,60 +44,66 @@ namespace FlexFit.Presentation.Middleware
             }
 
             var ip = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
-            var userId = context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            
-            // Track by User ID if authenticated, otherwise fallback to IP
+            var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var key = userId != null ? $"user:{userId}:{normalizedPath}" : $"ip:{ip}:{normalizedPath}";
 
-            // Check if blocked
-            if (BlockedKeys.TryGetValue(key, out var blockUntil))
+            if (IsBlocked(key))
             {
-                if (DateTime.UtcNow < blockUntil)
-                {
-                    context.Response.StatusCode = StatusCodes.Status429TooManyRequests;
-                    context.Response.ContentType = "application/json";
-                    await context.Response.WriteAsync("{\"message\": \"Pristup privremeno blokiran zbog previÅ¡e zahteva. SaÄekajte 15 minuta.\"}");
-                    return;
-                }
-                else
-                {
-                    BlockedKeys.TryRemove(key, out _);
-                }
+                await SendTooManyRequestsResponse(context, "Pristup privremeno blokiran zbog previse zahteva. Cekajte 15 minuta.");
+                return;
             }
 
-            var list = RequestLog.GetOrAdd(key, _ => new List<DateTime>());
-
-            lock (list)
+            var requests = RequestLog.GetOrAdd(key, _ => new List<DateTime>());
+            lock (requests)
             {
-                list.RemoveAll(t => DateTime.UtcNow - t >= limit.Period);
+                requests.RemoveAll(t => DateTime.UtcNow - t >= limit.Period);
                 
-                // Add header info
-                int remaining = limit.Limit - list.Count;
-                context.Response.Headers["X-RateLimit-Remaining"] = Math.Max(0, remaining - 1).ToString();
-
-                if (list.Count >= limit.Limit)
+                if (requests.Count >= limit.Limit)
                 {
-                    // Block for 15 minutes
                     BlockedKeys[key] = DateTime.UtcNow.AddMinutes(15);
-
-                    // Log violation to MongoDB
-                    _ = context.RequestServices.GetRequiredService<RateLimitViolationRepository>()
-                        .AddAsync(new RateLimitViolation 
-                        { 
-                            IpAddress = ip, 
-                            UserId = userId,
-                            Route = path, 
-                            Timestamp = DateTime.UtcNow 
-                        });
-
-                    context.Response.StatusCode = StatusCodes.Status429TooManyRequests;
-                    context.Response.ContentType = "application/json";
-                    context.Response.WriteAsync("{\"message\": \"PreviÅ¡e zahteva. Pristup blokiran na 15 minuta.\"}").Wait();
+                    LogViolation(context, ip, userId, path);
+                    SendTooManyRequestsResponse(context, "Previse zahteva. Pristup blokiran na 15 minuta.").Wait();
                     return;
                 }
-                list.Add(DateTime.UtcNow);
+                
+                requests.Add(DateTime.UtcNow);
+                context.Response.Headers["X-RateLimit-Remaining"] = (limit.Limit - requests.Count).ToString();
             }
+
             await _next(context);
         }
+
+        private string GetNormalizedPath(string path) => 
+            path.StartsWith("/api/membershipcards/check-code") ? "/api/membershipcards/check-code" : path;
+
+        private bool IsBlocked(string key)
+        {
+            if (BlockedKeys.TryGetValue(key, out var blockUntil))
+            {
+                if (DateTime.UtcNow < blockUntil) return true;
+                BlockedKeys.TryRemove(key, out _);
+            }
+            return false;
+        }
+
+        private async Task SendTooManyRequestsResponse(HttpContext context, string message)
+        {
+            context.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+            context.Response.ContentType = "application/json";
+            await context.Response.WriteAsync($"{{\"message\": \"{message}\"}}");
+        }
+
+        private void LogViolation(HttpContext context, string ip, string? userId, string path)
+        {
+            var repo = context.RequestServices.GetRequiredService<RateLimitViolationRepository>();
+            _ = repo.AddAsync(new RateLimitViolation 
+            { 
+                IpAddress = ip, 
+                UserId = userId,
+                Route = path, 
+                Timestamp = DateTime.UtcNow 
+            });
+        }
+
     }
 }

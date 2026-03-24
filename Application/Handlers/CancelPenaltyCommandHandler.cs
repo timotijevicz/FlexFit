@@ -1,4 +1,4 @@
-﻿using FlexFit.Application.Commands;
+using FlexFit.Application.Commands;
 using FlexFit.Infrastructure.UnitOfWorkLayer;
 using MediatR;
 
@@ -34,7 +34,7 @@ namespace FlexFit.Application.Handlers
                 return false;
             }
 
-            await _uow.SaveAsync();
+            // await _uow.SaveAsync(); // No EF changes needed anymore
             return true;
         }
     }

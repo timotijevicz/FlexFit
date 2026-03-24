@@ -19,7 +19,7 @@ namespace FlexFit.Presentation.Middleware
             try { await _next(context); }
             catch (Exception ex)
             {
-                Console.WriteLine($"Greška: {ex.Message}");
+                Console.WriteLine($"Greska: {ex.Message}");
                 context.Response.StatusCode = 500;
                 await context.Response.WriteAsJsonAsync(new
                 {

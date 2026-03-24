@@ -1,6 +1,8 @@
-﻿using FlexFit.Application.Commands;
+using FlexFit.Application.Commands;
 using FlexFit.Domain.Models;
 using FlexFit.Infrastructure.UnitOfWorkLayer;
+using FlexFit.Domain.MongoModels.Models;
+using FlexFit.Domain.MongoModels.Repositories;
 using MediatR;
 
 namespace FlexFit.Application.Handlers
@@ -23,13 +25,20 @@ namespace FlexFit.Application.Handlers
                 return false;
             }
 
-            // Set the start date to current date and end date to 30 days from now
             subCard.ValidFrom = DateTime.UtcNow;
             subCard.ValidTo = DateTime.UtcNow.AddDays(30);
             subCard.IsActive = true;
 
             await _uow.MembershipCards.UpdateAsync(subCard);
             await _uow.SaveAsync();
+
+            await _uow.MembershipLogs.AddAsync(new MembershipLog
+            {
+                CardNumber = subCard.CardNumber,
+                Action = $"Extension for Member {subCard.MemberId}",
+                NewExpiryDate = subCard.ValidTo.Value,
+                Timestamp = DateTime.UtcNow
+            });
 
             return true;
         }

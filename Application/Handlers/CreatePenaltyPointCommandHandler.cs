@@ -1,7 +1,11 @@
-﻿using FlexFit.Application.Commands;
+using FlexFit.Application.Commands;
 using FlexFit.Domain.Models;
 using FlexFit.Infrastructure.UnitOfWorkLayer;
+using FlexFit.Domain.MongoModels.Models;
 using MediatR;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FlexFit.Application.Handlers
 {
@@ -12,18 +16,24 @@ namespace FlexFit.Application.Handlers
 
         public async Task<bool> Handle(CreatePenaltyPointCommand request, CancellationToken cancellationToken)
         {
-            var point = new PenaltyPoint
+            try 
             {
-                MemberId = request.MemberId,
-                Date = DateTime.UtcNow,
-                Description = request.Description,
-                IsCanceled = false
-            };
+                // Direct MongoDB creation
+                await _uow.PenaltyLogs.AddAsync(new PenaltyLog
+                {
+                    MemberId = request.MemberId,
+                    Timestamp = DateTime.UtcNow,
+                    Type = "Point",
+                    Reason = request.Description
+                });
 
-            await _uow.PenaltyPoints.AddAsync(point);
-            await _uow.SaveAsync();
-
-            return true;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[CreatePenaltyPointHandler] Error: {ex.Message}");
+                return false;
+            }
         }
     }
 }

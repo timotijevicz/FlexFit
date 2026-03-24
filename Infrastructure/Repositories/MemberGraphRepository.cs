@@ -47,7 +47,6 @@ namespace FlexFit.Infrastructure.Repositories
 
         public async Task<IEnumerable<string>> GetRecommendedObjectsAsync(string memberId)
         {
-            // NEW RECOMMENDATION: Find objects that have similar resources to the ones this member uses most
             using var session = _context.GetSession();
             return await session.ExecuteReadAsync(async tx =>
             {
@@ -66,6 +65,93 @@ namespace FlexFit.Infrastructure.Repositories
                     list.Add(result.Current["name"].As<string>());
                 }
                 return list;
+            });
+        }
+
+        public async Task AssignCardToMemberAsync(string memberId, string cardId, string cardName = null)
+        {
+            using var session = _context.GetSession();
+            await session.ExecuteWriteAsync(async tx =>
+            {
+                await tx.RunAsync(@"
+                    MERGE (m:Member {id: $mId})
+                    MERGE (c:Card {id: $cId})
+                    ON CREATE SET c.name = $cName
+                    MERGE (m)-[:HAS_CARD]->(c)", 
+                    new { mId = memberId, cId = cardId, cName = cardName });
+            });
+        }
+
+        public async Task RecordBookingAsync(string memberId, int resourceId, string bookingId = null)
+        {
+            using var session = _context.GetSession();
+            await session.ExecuteWriteAsync(async tx =>
+            {
+                await tx.RunAsync(@"
+                    MERGE (m:Member {id: $mId})
+                    MERGE (r:Resource {id: $rId})
+                    MERGE (m)-[:BOOKED]->(r)
+                    WITH m, r
+                    WHERE $bId IS NOT NULL
+                    MERGE (b:Booking {id: $bId})
+                    MERGE (b)-[:FOR]->(r)", 
+                    new { mId = memberId, rId = resourceId.ToString(), bId = bookingId });
+            });
+        }
+
+        public async Task RecordEmployeeCheckAsync(string employeeId, string memberId, string employeeName = null)
+        {
+            using var session = _context.GetSession();
+            await session.ExecuteWriteAsync(async tx =>
+            {
+                await tx.RunAsync(@"
+                    MERGE (e:Employee {id: $eId})
+                    ON CREATE SET e.name = $eName
+                    MERGE (m:Member {id: $mId})
+                    MERGE (e)-[:CHECKED]->(m)", 
+                    new { eId = employeeId, eName = employeeName, mId = memberId });
+            });
+        }
+
+        public async Task AssignPenaltyToMemberAsync(string penaltyId, string memberId, string penaltyDescription = null)
+        {
+            using var session = _context.GetSession();
+            await session.ExecuteWriteAsync(async tx =>
+            {
+                await tx.RunAsync(@"
+                    MERGE (p:Penalty {id: $pId})
+                    ON CREATE SET p.description = $pDesc
+                    MERGE (m:Member {id: $mId})
+                    MERGE (p)-[:ASSIGNED_TO]->(m)", 
+                    new { pId = penaltyId, pDesc = penaltyDescription, mId = memberId });
+            });
+        }
+
+        public async Task LinkResourceToGymAsync(int resourceId, int gymId, string resourceName = null, string gymName = null)
+        {
+            using var session = _context.GetSession();
+            await session.ExecuteWriteAsync(async tx =>
+            {
+                await tx.RunAsync(@"
+                    MERGE (r:Resource {id: $rId})
+                    ON CREATE SET r.name = $rName
+                    MERGE (g:Gym {id: $gId})
+                    ON CREATE SET g.name = $gName
+                    MERGE (r)-[:BELONGS_TO]->(g)", 
+                    new { rId = resourceId.ToString(), rName = resourceName, gId = gymId.ToString(), gName = gymName });
+            });
+        }
+
+        public async Task LinkCardToGymAsync(string cardId, int gymId)
+        {
+            using var session = _context.GetSession();
+            await session.ExecuteWriteAsync(async tx =>
+            {
+                await tx.RunAsync(@"
+                    MERGE (c:Card {id: $cId})
+                    MERGE (g:Gym {id: $gId})
+                    MERGE (c)-[:VALID_IN]->(g)", 
+                    new { cId = cardId, gId = gymId.ToString() });
             });
         }
     }

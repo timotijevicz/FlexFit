@@ -12,7 +12,6 @@ namespace FlexFit.Application.Handlers
         public async Task<bool> Handle(CheckCardCodeQuery request, CancellationToken cancellationToken)
         {
             var existingCard = await _uow.MembershipCards.GetByCardNumberAsync(request.Code);
-            // Returns true if unique (i.e. no card with this code exists)
             return existingCard == null;
         }
     }

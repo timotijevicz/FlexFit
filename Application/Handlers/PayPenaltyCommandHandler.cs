@@ -1,4 +1,4 @@
-﻿using FlexFit.Application.Commands;
+using FlexFit.Application.Commands;
 using FlexFit.Infrastructure.UnitOfWorkLayer;
 using MediatR;
 
@@ -16,7 +16,8 @@ namespace FlexFit.Application.Handlers
 
             card.IsPaid = true;
             await _uow.PenaltyCards.UpdateAsync(card);
-            await _uow.SaveAsync();
+
+            return true;
 
             return true;
         }

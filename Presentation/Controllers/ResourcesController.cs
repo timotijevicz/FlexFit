@@ -21,7 +21,7 @@ namespace FlexFit.Presentation.Controllers
         public async Task<IActionResult> CreateResource([FromBody] FlexFit.Application.DTOs.CreateResourceDto dto)
         {
             await _uow.Resources.CreateResourceAsync(dto);
-            return Ok(new { message = "Sprava uspeÅ¡no dodata." });
+            return Ok(new { message = "Sprava uspesno dodata." });
         }
     }
 }

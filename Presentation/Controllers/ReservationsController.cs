@@ -1,4 +1,4 @@
-﻿using FlexFit.Domain.Models;
+using FlexFit.Domain.Models;
 using FlexFit.Infrastructure.UnitOfWorkLayer;
 using FlexFit.Application.DTOs;
 using FlexFit.Application.Commands;
@@ -37,51 +37,41 @@ namespace FlexFit.Presentation.Controllers
 
         [HttpPost("mark-no-show/{id}")]
         [Authorize(Roles = "Admin,Employee")]
-        public async Task<IActionResult> MarkNoShow(int id)
+        public async Task<IActionResult> MarkNoShow(string id)
         {
-            var reservation = await _uow.Reservations.GetByIdAsync(id);
-            if (reservation == null) return NotFound(new { message = "Rezervacija nije pronaÄ‘ena." });
+            var log = await _uow.Reservations.GetByIdAsync(id);
+            if (log == null) return NotFound(new { message = "Rezervacija nije pronadjena." });
 
-            reservation.Status = ReservationStatus.NoShow;
-            await _uow.Reservations.UpdateAsync(reservation);
+            log.Status = "NoShow";
+            await _uow.Reservations.UpdateAsync(log);
             await _uow.SaveAsync();
 
             var result = await _mediator.Send(new ProcessNoShowPenaltyCommand(id));
-            if (!result) return BadRequest(new { message = "GreÅ¡ka pri dodeljivanju kaznenog poena." });
+            if (!result) return BadRequest(new { message = "Greska pri dodeljivanju kaznenog poena." });
 
-            return Ok(new { message = "Rezervacija oznaÄena kao 'NoShow' i kazneni poen je uspeÅ¡no upisan." });
+            return Ok(new { message = "Rezervacija oznacena kao 'NoShow' i kazneni poen je uspesno upisan." });
         }
 
         [HttpDelete("cancel/{id}")]
         [Authorize(Roles = "Member,Admin,Employee")]
-        public async Task<IActionResult> CancelReservation(int id)
+        public async Task<IActionResult> CancelReservation(string id)
         {
-            var reservation = await _uow.Reservations.GetByIdAsync(id);
-            if (reservation == null)
+            var log = await _uow.Reservations.GetByIdAsync(id);
+            if (log == null)
             {
-                return NotFound(new { message = "Rezervacija nije pronaÄ‘ena." });
+                return NotFound(new { message = "Rezervacija nije pronadjena." });
             }
 
-            await _uow.Reservations.DeleteAsync(reservation);
-            return Ok(new { message = "Rezervacija je uspeÅ¡no otkazana." });
+            await _uow.Reservations.DeleteAsync(log);
+
+            return Ok(new { message = "Rezervacija je uspesno otkazana." });
         }
 
         [HttpGet("resource/{resourceId}")]
         public async Task<IActionResult> GetResourceReservations(int resourceId)
         {
-            var reservations = await _uow.Reservations.FindAsync(r => r.ResourceId == resourceId);
-            var now = DateTime.UtcNow;
-
-            var result = reservations.Select(r => new {
-                id = r.Id,
-                memberId = r.MemberId,
-                startTime = r.StartTime,
-                endTime = r.EndTime,
-                status = r.Status,
-                isExpired = r.EndTime <= now
-            }).ToList();
-
-            return Ok(result);
+            var logs = await _uow.ReservationLogs.GetByResourceIdAsync(resourceId);
+            return Ok(logs);
         }
     }
 }

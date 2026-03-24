@@ -1,6 +1,6 @@
-﻿using MediatR;
+using MediatR;
 
 namespace FlexFit.Application.Commands
 {
-    public record PayPenaltyCommand(int PenaltyId) : IRequest<bool>;
+    public record PayPenaltyCommand(string PenaltyId) : IRequest<bool>;
 }

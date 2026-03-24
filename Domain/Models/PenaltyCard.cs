@@ -1,8 +1,8 @@
-﻿namespace FlexFit.Domain.Models
+namespace FlexFit.Domain.Models
 {
     public class PenaltyCard
     {
-        public int Id { get; set; }
+        public string Id { get; set; } = string.Empty;
         public int MemberId { get; set; }
         public Member Member { get; set; }
         public int FitnessObjectId { get; set; }

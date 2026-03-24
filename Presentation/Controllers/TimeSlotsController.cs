@@ -33,7 +33,7 @@ namespace FlexFit.Presentation.Controllers
         {
             try {
                 var id = await _repository.CreateTimeSlotAsync(dto);
-                return Ok(new { message = "PredloÅ¾eni termin uspeÅ¡no dodat.", id = id });
+                return Ok(new { message = "Predlozeni termin uspesno dodat.", id = id });
             } catch (ArgumentException ex) {
                 return BadRequest(ex.Message);
             } catch (Exception ex) {
@@ -47,9 +47,9 @@ namespace FlexFit.Presentation.Controllers
         {
             var success = await _repository.DeleteTimeSlotAsync(id);
             if (!success)
-                return NotFound("Termin nije pronaÄ‘en.");
+                return NotFound("Termin nije pronadjen.");
 
-            return Ok(new { message = "Termin uspeÅ¡no obrisan." });
+            return Ok(new { message = "Termin uspesno obrisan." });
         }
     }
 }

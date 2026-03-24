@@ -19,7 +19,7 @@ namespace FlexFit.Application.Handlers
 
         public async Task<bool> Handle(RegisterMemberCommand request, CancellationToken cancellationToken)
         {
-            // 1. Verify Card Number exists
+           
             var card = await _uow.MembershipCards.GetByCardNumberAsync(request.Dto.CardNumber);
 
             if (card == null || card.MemberId != null || !(card is SubscriptionCard subCard)) 
@@ -27,10 +27,9 @@ namespace FlexFit.Application.Handlers
                 return false; 
             }
 
-            // 2. Hash Password
+        
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.Dto.Password);
 
-            // 3. Create Member
             var newMember = new Member
             {
                 FirstName = request.Dto.FirstName,
@@ -44,9 +43,9 @@ namespace FlexFit.Application.Handlers
             };
 
             await _uow.Members.AddAsync(newMember);
-            await _uow.SaveAsync(); // Save to generate Member.Id
+            await _uow.SaveAsync(); 
 
-            // 4. Assign Card to Member
+    
             card.MemberId = newMember.Id;
             newMember.SubscriptionCards.Add(subCard);
             

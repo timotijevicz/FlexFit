@@ -8,7 +8,7 @@
         public string Email { get; set; }
         public string Password { get; set; }
         public string JMBG { get; set; }
-        public string CardNumber { get; set; } // OVO JE KARTICA KOJU JE KUPITI/DOBITI PRED ULAZAK
+        public string CardNumber { get; set; } 
         public bool PersonalTrainer { get; set; }
     }
 }

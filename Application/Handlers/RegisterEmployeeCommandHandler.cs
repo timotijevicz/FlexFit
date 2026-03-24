@@ -1,4 +1,4 @@
-﻿using FlexFit.Application.Commands;
+using FlexFit.Application.Commands;
 using FlexFit.Domain.Models;
 using FlexFit.Infrastructure.UnitOfWorkLayer;
 using MediatR;
@@ -17,10 +17,9 @@ namespace FlexFit.Application.Handlers
 
         public async Task<bool> Handle(RegisterEmployeeCommand request, CancellationToken cancellationToken)
         {
-             // 1. Hash Password
+        
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.Dto.Password);
 
-            // 2. Create Employee
             var newEmployee = new Employee
             {
                 FirstName = request.Dto.FirstName,

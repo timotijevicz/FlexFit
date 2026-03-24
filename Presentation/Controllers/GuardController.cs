@@ -1,4 +1,4 @@
-﻿using FlexFit.Application.Commands;
+using FlexFit.Application.Commands;
 using FlexFit.Application.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

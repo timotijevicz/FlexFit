@@ -1,7 +1,12 @@
-﻿using FlexFit.Application.Commands;
+using FlexFit.Application.Commands;
 using FlexFit.Domain.Models;
 using FlexFit.Infrastructure.UnitOfWorkLayer;
+using FlexFit.Domain.MongoModels.Models;
+using FlexFit.Domain.MongoModels.Repositories;
 using MediatR;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FlexFit.Application.Handlers
 {
@@ -16,24 +21,45 @@ namespace FlexFit.Application.Handlers
 
         public async Task<bool> Handle(ProcessNoShowPenaltyCommand request, CancellationToken cancellationToken)
         {
-            var reservation = await _uow.Reservations.GetByIdAsync(request.ReservationId);
-            if (reservation == null) return false;
-
-            if (reservation.Status == ReservationStatus.NoShow)
+            try 
             {
-                var penaltyPoint = new PenaltyPoint
+                Console.WriteLine($"[ProcessNoShowPenalty] Handling No-Show for Reservation: {request.ReservationId}");
+                
+                var log = await _uow.Reservations.GetByIdAsync(request.ReservationId);
+                if (log == null) 
                 {
-                    MemberId = reservation.MemberId,
-                    Description = $"Automatski kazneni poen zbog nedolaska na termin (Rezervacija ID: {reservation.Id})",
-                    Date = DateTime.UtcNow
-                };
+                    Console.WriteLine($"[ProcessNoShowPenalty] Reservation {request.ReservationId} not found.");
+                    return false;
+                }
 
-                await _uow.PenaltyPoints.AddAsync(penaltyPoint);
-                await _uow.SaveAsync();
-                return true;
+                if (log.Status == "NoShow")
+                {
+                    Console.WriteLine($"[ProcessNoShowPenalty] Member {log.MemberId} was a No-Show. Issuing penalty point to MongoDB...");
+                    
+                    // Using the refactored IPenaltyPointRepository which is now MongoDB-backed
+                    await _uow.PenaltyPoints.AddAsync(new PenaltyPoint
+                    {
+                        MemberId = log.MemberId,
+                        Date = DateTime.UtcNow,
+                        Description = $"Automatski kazneni poen zbog nedolaska na termin (Rezervacija ID: {log.Id})",
+                        IsCanceled = false
+                    });
+
+                    Console.WriteLine($"[ProcessNoShowPenalty] Penalty point recorded successfully in MongoDB.");
+                    return true;
+                }
+                else 
+                {
+                    Console.WriteLine($"[ProcessNoShowPenalty] Reservation {request.ReservationId} status is {log.Status}, not NoShow. Skipping penalty.");
+                }
+
+                return false;
             }
-
-            return false;
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ProcessNoShowPenaltyHandler] FATAL ERROR: {ex.Message}");
+                return false;
+            }
         }
     }
 }

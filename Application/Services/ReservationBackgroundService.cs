@@ -1,4 +1,4 @@
-﻿using FlexFit.Application.Commands;
+using FlexFit.Application.Commands;
 using FlexFit.Domain.Models;
 using FlexFit.Infrastructure.UnitOfWorkLayer;
 using MediatR;
@@ -34,26 +34,25 @@ namespace FlexFit.Application.Services
 
             var now = DateTime.UtcNow;
             
-            // PronaÄ‘i sve rezervacije koje su istekle a nisu iskoriÅ¡Ä‡ene
-            var expiredReservations = await uow.Reservations.FindAsync(r => 
-                r.Status == ReservationStatus.Reserved && 
-                r.EndTime < now);
+            var expiredReservations = await uow.Reservations.GetExpiredReservationsAsync(now);
 
             foreach (var reservation in expiredReservations)
             {
                 try
                 {
-                    reservation.Status = ReservationStatus.NoShow;
+                    reservation.Status = "NoShow";
                     await uow.Reservations.UpdateAsync(reservation);
-                    await uow.SaveAsync();
+                    // No need for uow.SaveAsync() here as UpdateAsync should handle it for MongoDB
+                    // and its internal SQL sync.
 
-                    // Pokreni komandu za dodeljivanje kaznenih poena
-                    await mediator.Send(new ProcessNoShowPenaltyCommand(reservation.Id));
+                    if (reservation.Id != null)
+                    {
+                        await mediator.Send(new ProcessNoShowPenaltyCommand(reservation.Id));
+                    }
                 }
                 catch (Exception ex)
                 {
-                    // MoÅ¾emo dodati logovanje ovde ako je potrebno
-                    Console.WriteLine($"GreÅ¡ka pri obradi no-show rezervacije {reservation.Id}: {ex.Message}");
+                    Console.WriteLine($"Greska pri obradi no-show rezervacije {reservation.Id}: {ex.Message}");
                 }
             }
         }

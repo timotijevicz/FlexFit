@@ -1,4 +1,4 @@
-﻿using FlexFit.Infrastructure.Data;
+using FlexFit.Infrastructure.Data;
 using FlexFit.Domain.MongoModels.Models;
 using MongoDB.Driver;
 
@@ -15,7 +15,9 @@ namespace FlexFit.Domain.MongoModels.Repositories
 
         public async Task AddAsync(EntryLog log)
         {
+            Console.WriteLine($"[EntryLogRepo] Inserting log for member {log.MemberId}...");
             await _collection.InsertOneAsync(log);
+            Console.WriteLine($"[EntryLogRepo] Log inserted successfully.");
         }
 
         public async Task<List<EntryLog>> GetAllAsync()

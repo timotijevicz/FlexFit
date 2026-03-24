@@ -1,10 +1,10 @@
-﻿using FlexFit.Domain.Models;
+using FlexFit.Domain.Models;
 
 namespace FlexFit.Infrastructure.Repositories.Interfaces
 {
     public interface IPenaltyPointRepository
     {
-        Task<PenaltyPoint> GetByIdAsync(int id);
+        Task<PenaltyPoint> GetByIdAsync(string id);
         Task<IEnumerable<PenaltyPoint>> GetAllAsync();
         Task AddAsync(PenaltyPoint point);
         Task UpdateAsync(PenaltyPoint point);
