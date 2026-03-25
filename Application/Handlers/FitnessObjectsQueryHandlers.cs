@@ -1,4 +1,4 @@
-﻿using FlexFit.Application.Queries;
+using FlexFit.Application.Queries;
 using FlexFit.Domain.Models;
 using FlexFit.Infrastructure.UnitOfWorkLayer;
 using MediatR;
@@ -19,7 +19,7 @@ namespace FlexFit.Application.Handlers
 
         public async Task<IEnumerable<FitnessObject>> Handle(GetAllFitnessObjectsQuery request, CancellationToken cancellationToken)
         {
-            return await _uow.FitnessObjects.GetAllAsync();
+            return await _uow.FitnessObjects.GetAllAsync(request.SearchTerm, request.City);
         }
     }
 

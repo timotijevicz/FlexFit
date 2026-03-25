@@ -1,4 +1,4 @@
-﻿using FlexFit.Application.Queries;
+using FlexFit.Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -17,9 +17,9 @@ namespace FlexFit.Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] string searchTerm = null, [FromQuery] string city = null)
         {
-            var result = await _mediator.Send(new GetAllFitnessObjectsQuery());
+            var result = await _mediator.Send(new GetAllFitnessObjectsQuery(searchTerm, city));
             return Ok(result);
         }
 
