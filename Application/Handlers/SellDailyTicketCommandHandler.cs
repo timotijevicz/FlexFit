@@ -1,7 +1,7 @@
 using FlexFit.Application.Commands;
 using FlexFit.Domain.Models;
 using FlexFit.Infrastructure.UnitOfWorkLayer;
-using FlexFit.Domain.Interfaces.Repositories;
+using FlexFit.Infrastructure.Repositories.Interfaces;
 using MediatR;
 
 namespace FlexFit.Application.Handlers

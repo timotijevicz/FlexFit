@@ -2,6 +2,7 @@ using FlexFit.Application.Commands;
 using FlexFit.Domain.Models;
 using FlexFit.Infrastructure.UnitOfWorkLayer;
 using FlexFit.Domain.MongoModels.Models;
+using FlexFit.Infrastructure.Repositories.Interfaces;
 using MediatR;
 using System.Linq;
 
@@ -18,26 +19,32 @@ namespace FlexFit.Application.Handlers
             {
                 var twelveHoursAgo = DateTime.UtcNow.AddHours(-12);
                 
-                // MongoDB-only check
                 var memberPenalties = await _uow.PenaltyLogs.GetByMemberIdAsync(request.MemberId);
                 var existingPenalty = memberPenalties.Any(p => p.FitnessObjectId == request.FitnessObjectId 
-                                                         && p.Timestamp >= twelveHoursAgo);
+                                                         && p.Date >= twelveHoursAgo);
 
                 if (existingPenalty)
                 {
                    return false; 
                 }
 
-                // Create MongoDB Log directly
-                await _uow.PenaltyLogs.AddAsync(new PenaltyLog
+                var penalty = new PenaltyLog
                 {
                     MemberId = request.MemberId,
                     FitnessObjectId = request.FitnessObjectId,
-                    Timestamp = DateTime.UtcNow,
+                    Date = DateTime.UtcNow,
                     Price = (double?)request.Price,
                     Reason = request.Reason,
-                    Type = "DailyTicket" // Default type for manual penalty cards
-                });
+                    Type = "DailyTicket" 
+                };
+
+                await _uow.PenaltyLogs.AddAsync(penalty);
+                
+                try {
+                    await _uow.MemberGraph.AssignPenaltyToMemberAsync(penalty.Id, request.MemberId.ToString(), request.Reason);
+                } catch (Exception ex) {
+                    Console.WriteLine($"[CreatePenaltyCardHandler] Neo4j Sync Error: {ex.Message}");
+                }
 
                 return true;
             }

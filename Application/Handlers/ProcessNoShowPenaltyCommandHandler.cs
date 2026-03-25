@@ -2,6 +2,7 @@ using FlexFit.Application.Commands;
 using FlexFit.Domain.Models;
 using FlexFit.Infrastructure.UnitOfWorkLayer;
 using FlexFit.Domain.MongoModels.Models;
+using FlexFit.Infrastructure.Repositories.Interfaces;
 using FlexFit.Domain.MongoModels.Repositories;
 using MediatR;
 using System;
@@ -28,22 +29,33 @@ namespace FlexFit.Application.Handlers
                 var log = await _uow.Reservations.GetByIdAsync(request.ReservationId);
                 if (log == null) 
                 {
-                    Console.WriteLine($"[ProcessNoShowPenalty] Reservation {request.ReservationId} not found.");
+                    Console.WriteLine($"[ProcessNoShowPenalty] ERROR: Reservation {request.ReservationId} not found in MongoDB.");
                     return false;
                 }
+
+                Console.WriteLine($"[ProcessNoShowPenalty] Reservation found. ID: {log.Id}, Current Status: {log.Status}, MemberId: {log.MemberId}");
 
                 if (log.Status == "NoShow")
                 {
                     Console.WriteLine($"[ProcessNoShowPenalty] Member {log.MemberId} was a No-Show. Issuing penalty point to MongoDB...");
                     
-                    // Using the refactored IPenaltyPointRepository which is now MongoDB-backed
-                    await _uow.PenaltyPoints.AddAsync(new PenaltyPoint
+                    var penalty = new PenaltyPoint
                     {
                         MemberId = log.MemberId,
                         Date = DateTime.UtcNow,
                         Description = $"Automatski kazneni poen zbog nedolaska na termin (Rezervacija ID: {log.Id})",
                         IsCanceled = false
-                    });
+                    };
+                    await _uow.PenaltyPoints.AddAsync(penalty);
+
+                    try {
+                        // Record that the booking actually happened (as a no-show)
+                        await _uow.MemberGraph.RecordBookingAsync(log.MemberId.ToString(), log.ResourceId, log.Id);
+                        // Record the penalty
+                        await _uow.MemberGraph.AssignPenaltyToMemberAsync(penalty.Id, log.MemberId.ToString(), penalty.Description);
+                    } catch (Exception ex) {
+                        Console.WriteLine($"[ProcessNoShowPenalty] Neo4j Sync Error: {ex.Message}");
+                    }
 
                     Console.WriteLine($"[ProcessNoShowPenalty] Penalty point recorded successfully in MongoDB.");
                     return true;

@@ -2,6 +2,7 @@ using FlexFit.Application.Commands;
 using FlexFit.Domain.Models;
 using FlexFit.Infrastructure.UnitOfWorkLayer;
 using FlexFit.Domain.MongoModels.Models;
+using FlexFit.Infrastructure.Repositories.Interfaces;
 using MediatR;
 using System;
 using System.Threading;
@@ -18,14 +19,21 @@ namespace FlexFit.Application.Handlers
         {
             try 
             {
-                // Direct MongoDB creation
-                await _uow.PenaltyLogs.AddAsync(new PenaltyLog
+                var penalty = new PenaltyLog
                 {
                     MemberId = request.MemberId,
-                    Timestamp = DateTime.UtcNow,
+                    Date = DateTime.UtcNow,
                     Type = "Point",
                     Reason = request.Description
-                });
+                };
+                
+                await _uow.PenaltyLogs.AddAsync(penalty);
+
+                try {
+                    await _uow.MemberGraph.AssignPenaltyToMemberAsync(penalty.Id, request.MemberId.ToString(), request.Description);
+                } catch (Exception ex) {
+                    Console.WriteLine($"[CreatePenaltyPointHandler] Neo4j Sync Error: {ex.Message}");
+                }
 
                 return true;
             }

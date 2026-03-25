@@ -1,6 +1,6 @@
 
 using FlexFit.Infrastructure.Repositories.Interfaces;
-using FlexFit.Domain.Interfaces.Repositories;
+
 using FlexFit.Domain.MongoModels.Repositories;
 
 

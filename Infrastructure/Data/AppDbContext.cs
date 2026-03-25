@@ -15,7 +15,6 @@ namespace FlexFit.Infrastructure.Data
         public DbSet<MembershipCard> MembershipCards { get; set; }
         public DbSet<DailyCard> DailyCards { get; set; }
         public DbSet<SubscriptionCard> SubscriptionCards { get; set; }
-         // Removed SQL PenaltyCards and PenaltyPoints - now in MongoDB
         // public DbSet<PenaltyCard> PenaltyCards { get; set; }
         // public DbSet<PenaltyPoint> PenaltyPoints { get; set; }
         // public DbSet<Reservation> Reservations { get; set; }

@@ -282,3 +282,4 @@ C:\Users\emina\Desktop\flexf\flex\FlexFit\obj\Debug\net8.0\FlexFit.pdb
 C:\Users\emina\Desktop\flexf\flex\FlexFit\obj\Debug\net8.0\FlexFit.genruntimeconfig.cache
 C:\Users\emina\Desktop\flexf\flex\FlexFit\obj\Debug\net8.0\ref\FlexFit.dll
 C:\Users\emina\Desktop\flexf\flex\FlexFit\bin\Debug\net8.0\Neo4j.Driver.dll
+C:\Users\emina\Desktop\flexf\flex\FlexFit\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

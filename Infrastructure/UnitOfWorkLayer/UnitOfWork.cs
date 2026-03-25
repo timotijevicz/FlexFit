@@ -1,7 +1,7 @@
 using FlexFit.Infrastructure.Data;
 using FlexFit.Infrastructure.Repositories;
 using FlexFit.Infrastructure.Repositories.Interfaces;
-using FlexFit.Domain.Interfaces.Repositories;
+using FlexFit.Infrastructure.Repositories.Interfaces;
 using FlexFit.Domain.MongoModels.Repositories;
 
 namespace FlexFit.Infrastructure.UnitOfWorkLayer
@@ -26,7 +26,7 @@ namespace FlexFit.Infrastructure.UnitOfWorkLayer
             _graphRepo = graphRepo;
             _mongoContext = mongoContext;
             
-            // MongoDB repositories (Direct assignment)
+            // MongoDB repositories 
             EntryLogs = new EntryLogRepository(_mongoContext);
             PenaltyLogs = new PenaltyLogRepository(_mongoContext);
             ReservationLogs = new ReservationLogRepository(_mongoContext);
@@ -35,13 +35,11 @@ namespace FlexFit.Infrastructure.UnitOfWorkLayer
             Logins = new LoginRepository(_mongoContext);
             RateLimitViolations = new RateLimitViolationRepository(_mongoContext);
 
-            // Interface-based repositories (DI Injected)
             Resources = resourceRepo;
             Reservations = reservationRepo;
             PenaltyCards = penaltyCardRepo;
             PenaltyPoints = penaltyPointRepo;
 
-            // Rest (Manual for now, consistency with original)
             Members = new MemberRepository(_context);
             Employees = new EmployeeRepository(_context);
             FitnessObjects = new FitnessObjectRepository(_context);

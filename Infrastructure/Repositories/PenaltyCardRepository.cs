@@ -34,8 +34,7 @@ namespace FlexFit.Infrastructure.Repositories
 
         public async Task AddAsync(PenaltyCard penaltyCard)
         {
-            // This method is now secondary given handlers call PenaltyLogs directly,
-            // but we keep it for consistency.
+            
             await _mongoRepo.AddAsync(new Domain.MongoModels.Models.PenaltyLog
             {
                 MemberId = penaltyCard.MemberId,
@@ -43,7 +42,7 @@ namespace FlexFit.Infrastructure.Repositories
                 Reason = penaltyCard.Reason,
                 Price = (double?)penaltyCard.Price,
                 Type = "DailyTicket",
-                Timestamp = DateTime.UtcNow,
+                Date = DateTime.UtcNow,
                 IsPaid = penaltyCard.IsPaid,
                 IsCanceled = penaltyCard.IsCanceled,
                 CancelReason = penaltyCard.CancelReason
@@ -54,7 +53,7 @@ namespace FlexFit.Infrastructure.Repositories
         {
             var threshold = DateTime.UtcNow.AddHours(-hours);
             var logs = await _mongoRepo.GetByMemberIdAsync(memberId);
-            return logs.Any(p => p.Timestamp >= threshold && (p.Type == "Card" || p.Type == "DailyTicket"));
+            return logs.Any(p => p.Date >= threshold && (p.Type == "Card" || p.Type == "DailyTicket"));
         }
 
         public async Task UpdateAsync(PenaltyCard penaltyCard)
@@ -64,7 +63,7 @@ namespace FlexFit.Infrastructure.Repositories
             {
                 log.Reason = penaltyCard.Reason;
                 log.Price = (double?)penaltyCard.Price;
-                log.Timestamp = penaltyCard.Date;
+                log.Date = penaltyCard.Date;
                 log.IsPaid = penaltyCard.IsPaid;
                 log.IsCanceled = penaltyCard.IsCanceled;
                 log.CancelReason = penaltyCard.CancelReason;
@@ -89,7 +88,7 @@ namespace FlexFit.Infrastructure.Repositories
                 Id = log.Id ?? string.Empty,
                 MemberId = log.MemberId,
                 FitnessObjectId = log.FitnessObjectId ?? 0,
-                Date = log.Timestamp,
+                Date = log.Date,
                 Price = (decimal)(log.Price ?? 0),
                 Reason = log.Reason,
                 IsPaid = log.IsPaid,

@@ -4,7 +4,7 @@ using FlexFit.Infrastructure.UnitOfWorkLayer;
 using MediatR;
 using BCrypt.Net;
 
-using FlexFit.Domain.Interfaces.Repositories;
+using FlexFit.Infrastructure.Repositories.Interfaces;
 
 namespace FlexFit.Application.Handlers
 {

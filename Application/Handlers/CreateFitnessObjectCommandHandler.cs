@@ -2,7 +2,7 @@ using FlexFit.Application.Commands;
 using FlexFit.Infrastructure.UnitOfWorkLayer;
 using MediatR;
 
-using FlexFit.Domain.Interfaces.Repositories;
+using FlexFit.Infrastructure.Repositories.Interfaces;
 
 namespace FlexFit.Application.Handlers
 {

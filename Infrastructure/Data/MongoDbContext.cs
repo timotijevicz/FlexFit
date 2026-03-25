@@ -6,23 +6,21 @@ namespace FlexFit.Infrastructure.Data
     public class MongoDbContext
     {
         private readonly IMongoDatabase _database;
-        private readonly IConfiguration _configuration; // Changed from Microsoft.Extensions.Configuration.IConfiguration
+        private readonly IConfiguration _configuration;  
 
-        public MongoDbContext(IConfiguration configuration) // Changed from Microsoft.Extensions.Configuration.IConfiguration
+        public MongoDbContext(IConfiguration configuration) 
         {
             _configuration = configuration;
             var connectionString = _configuration["MongoSettings:ConnectionString"] ?? "mongodb://localhost:27017";
             var databaseName = _configuration["MongoSettings:Database"] ?? "flexfit_logs";
 
-            Console.WriteLine($"[MongoDbContext] Connecting to {connectionString}, DB: {databaseName}");
             
             var settings = MongoClientSettings.FromConnectionString(connectionString);
             settings.ConnectTimeout = TimeSpan.FromSeconds(5);
             settings.ServerSelectionTimeout = TimeSpan.FromSeconds(5);
             
-            var client = new MongoClient(settings); // Changed to use settings
+            var client = new MongoClient(settings); 
             _database = client.GetDatabase(databaseName);
-            Console.WriteLine($"[MongoDbContext] Client initialized with 5s timeouts.");
         }
 
         public IMongoCollection<EntryLog> EntryLogs =>

@@ -10,7 +10,7 @@ namespace FlexFit.Domain.MongoModels.Models
         public string? Id { get; set; }
 
         public string CardNumber { get; set; }
-        public string Action { get; set; } // Extension, New Card, etc.
+        public string Action { get; set; } 
         public DateTime NewExpiryDate { get; set; }
         public DateTime Timestamp { get; set; }
     }

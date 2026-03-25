@@ -5,7 +5,7 @@ using FlexFit.Domain.MongoModels.Repositories;
 using FlexFit.Infrastructure.UnitOfWorkLayer;
 using MediatR;
 using System.Linq;
-using FlexFit.Domain.Interfaces.Repositories;
+using FlexFit.Infrastructure.Repositories.Interfaces;
 
 namespace FlexFit.Application.Handlers
 {
@@ -50,8 +50,6 @@ namespace FlexFit.Application.Handlers
                 await _uow.EntryLogs.AddAsync(log);
                 Console.WriteLine($"[LogEntryHandler] EntryLogs.AddAsync finished.");
 
-                // 2. Log Incident to MongoDB if applicable
-                // For "Invalid" cards, we only record in EntryLog, not in Incidents (as per requirement "it is not saved in the mongo database")
                 if (log.Incident != null && !isInvalid)
                 {
                     try 
@@ -69,17 +67,20 @@ namespace FlexFit.Application.Handlers
                     catch (Exception ex)
                     {
                         Console.WriteLine($"[LogEntryHandler] WARNING: Failed to log incident to MongoDB: {ex.Message}");
-                        // We continue so the penalty can still be issued.
                     }
                 }
 
-                // 3. Update Neo4j
                 try 
                 {
                     if (dto.MemberId > 0)
                     {
                         Console.WriteLine($"[LogEntryHandler] Updating Neo4j for visit...");
                         await _graphRepo.RecordVisitAsync(dto.MemberId.ToString(), dto.FitnessObjectId);
+                        
+                        if (dto.EmployeeId > 0)
+                        {
+                            await _graphRepo.RecordEmployeeCheckAsync(dto.EmployeeId.ToString(), dto.MemberId.ToString());
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -87,8 +88,6 @@ namespace FlexFit.Application.Handlers
                     Console.WriteLine($"[LogEntryHandler] WARNING: Neo4j update failed: {ex.Message}");
                 }
 
-                // 4. Automated Penalty Check (MongoDB Only)
-                // Do NOT issue penalty for "Invalid" cards
                 bool isDailyOrSub = dto.CardType == "Daily" || dto.CardType == "Dnevna" || 
                                     dto.CardType == "Subscription" || dto.CardType == "Pretplatna" ||
                                     dto.CardType == "DailyTicket" || dto.CardType == "DnevnaKarta";
@@ -105,16 +104,23 @@ namespace FlexFit.Application.Handlers
                         if (!hasRecentPenalty)
                         {
                             Console.WriteLine($"[LogEntryHandler] Issuing penalty for member {dto.MemberId}");
-                            // Bypassing SQL model entirely, using MongoDB Repository directly via UoW
-                            await _uow.PenaltyLogs.AddAsync(new PenaltyLog
+                            var penalty = new PenaltyLog
                             {
                                 MemberId = dto.MemberId,
                                 FitnessObjectId = dto.FitnessObjectId,
-                                Timestamp = DateTime.UtcNow,
+                                Date = DateTime.UtcNow,
                                 Price = 1000,
                                 Type = "DailyTicket",
                                 Reason = $"Automatski izdata kazna zbog nevažeće kartice ({dto.CardNumber}). Tip: {dto.CardType}, Status: {dto.CardStatus}"
-                            });
+                            };
+                            await _uow.PenaltyLogs.AddAsync(penalty);
+                            
+                            try {
+                                await _graphRepo.AssignPenaltyToMemberAsync(penalty.Id, dto.MemberId.ToString(), penalty.Reason);
+                            } catch (Exception ex) {
+                                Console.WriteLine($"[LogEntryHandler] Neo4j Penalty Sync Error: {ex.Message}");
+                            }
+
                             Console.WriteLine($"[LogEntryHandler] Penalty recorded in MongoDB.");
                         }
                         else 
@@ -128,7 +134,6 @@ namespace FlexFit.Application.Handlers
                     }
                 }
 
-                // 5. Mark Reservations as Used
                 if (dto.MemberId > 0)
                 {
                     var now = DateTime.UtcNow;

@@ -3,7 +3,7 @@ using FlexFit.Domain.Models;
 using FlexFit.Infrastructure.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using FlexFit.Application.DTOs;
-using FlexFit.Domain.Interfaces.Repositories;
+using FlexFit.Infrastructure.Repositories.Interfaces;
 using FlexFit.Domain.MongoModels.Models;
 using FlexFit.Domain.MongoModels.Repositories;
 
@@ -36,22 +36,18 @@ namespace FlexFit.Infrastructure.Repositories
 
         public async Task AddAsync(ReservationLog reservation)
         {
-            // Original SQL write (Commented out per user request)
             /*
             await _context.Reservations.AddAsync(reservation);
             await _context.SaveChangesAsync();
             */
 
-            // MongoDB mirror (Logic Primary)
             await _mongoRepo.AddAsync(reservation);
         }
 
         public async Task UpdateAsync(ReservationLog log)
         {
-            // 1. MongoDB Update
             await _mongoRepo.UpdateAsync(log.Id, log);
 
-            // 2. Sync to PostgreSQL
             // if (log.SqlId.HasValue)
             // {
             //     var sqlRes = await _context.Reservations.FindAsync(log.SqlId.Value);
@@ -65,11 +61,9 @@ namespace FlexFit.Infrastructure.Repositories
 
         public async Task DeleteAsync(ReservationLog log)
         {
-            // 1. MongoDB Status Update
             log.Status = "Canceled";
             await _mongoRepo.UpdateAsync(log.Id, log);
 
-            // 2. Sync to PostgreSQL (Commented out per user request)
             /*
             if (log.SqlId.HasValue)
             {
@@ -90,7 +84,6 @@ namespace FlexFit.Infrastructure.Repositories
                 if (dto.StartTime >= dto.EndTime)
                     return (false, "Pocetno vreme mora biti pre krajnjeg.");
 
-                // Use MongoDB for checks
                 var memberReservations = await _mongoRepo.GetByMemberIdAsync(dto.MemberId);
                 var alreadyBooked = memberReservations?.Any(r => 
                     r.ResourceId == dto.ResourceId && 
@@ -102,7 +95,6 @@ namespace FlexFit.Infrastructure.Repositories
                     return (false, "Vec ste uspesno zakazali ovaj termin. Nije moguce zakazati isti termin vise puta.");
                 }
 
-                // Still need context to check resource capacity/type
                 var resource = await _context.Resources.FindAsync(dto.ResourceId);
                 int maxCapacity = (resource != null && resource.Type == ResourceType.GrupnaSala) ? 10 : 5;
 
@@ -126,12 +118,11 @@ namespace FlexFit.Infrastructure.Repositories
                     Console.WriteLine($"Neo4j Sync Error: {ex.Message}");
                 }
 
-                // Write to MongoDB (Sole Primary)
                 await _mongoRepo.AddAsync(new ReservationLog
                 {
                     MemberId = dto.MemberId,
                     ResourceId = dto.ResourceId,
-                    SqlId = 0, // No longer using SQL ID
+                    SqlId = 0, 
                     StartTime = dto.StartTime,
                     EndTime = dto.EndTime,
                     Status = "Reserved",

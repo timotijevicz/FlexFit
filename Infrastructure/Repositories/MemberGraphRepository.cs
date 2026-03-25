@@ -1,4 +1,4 @@
-using FlexFit.Domain.Interfaces.Repositories;
+using FlexFit.Infrastructure.Repositories.Interfaces;
 using FlexFit.Infrastructure.Data;
 using Neo4j.Driver;
 

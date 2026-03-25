@@ -1,6 +1,7 @@
-﻿using FlexFit.Application.Commands;
+using FlexFit.Application.Commands;
 using FlexFit.Domain.Models;
 using FlexFit.Infrastructure.UnitOfWorkLayer;
+using FlexFit.Infrastructure.Repositories.Interfaces;
 using MediatR;
 
 namespace FlexFit.Application.Handlers
@@ -26,6 +27,13 @@ namespace FlexFit.Application.Handlers
             };
 
             await _uow.MembershipCards.AddAsync(card);
+            
+            try {
+                await _uow.MemberGraph.AssignCardToMemberAsync(card.MemberId.ToString(), card.CardNumber, "Subscription");
+            } catch (Exception ex) {
+                Console.WriteLine($"[CreateSubscriptionCardHandler] Neo4j Sync Error: {ex.Message}");
+            }
+
             await _uow.SaveAsync();
             return true;
         }

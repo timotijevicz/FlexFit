@@ -38,7 +38,7 @@ namespace FlexFit.Infrastructure.Repositories
                 MemberId = point.MemberId,
                 Reason = point.Description,
                 Type = "Point",
-                Timestamp = DateTime.UtcNow,
+                Date = DateTime.UtcNow,
                 IsCanceled = point.IsCanceled,
                 CancelReason = point.CancelReason
             });
@@ -73,7 +73,7 @@ namespace FlexFit.Infrastructure.Repositories
                 Id = log.Id ?? string.Empty,
                 MemberId = log.MemberId,
                 Description = log.Reason,
-                Date = log.Timestamp,
+                Date = log.Date,
                 IsCanceled = log.IsCanceled,
                 CancelReason = log.CancelReason
             };

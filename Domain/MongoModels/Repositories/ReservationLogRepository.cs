@@ -40,7 +40,8 @@ namespace FlexFit.Domain.MongoModels.Repositories
 
         public async Task<ReservationLog?> GetByIdAsync(string id)
         {
-            return await _collection.Find(r => r.Id == id).FirstOrDefaultAsync();
+            var filter = Builders<ReservationLog>.Filter.Eq(r => r.Id, id);
+            return await _collection.Find(filter).FirstOrDefaultAsync();
         }
 
         public async Task<List<ReservationLog>> GetExpiredReservationsAsync(DateTime now)
@@ -50,7 +51,17 @@ namespace FlexFit.Domain.MongoModels.Repositories
 
         public async Task UpdateAsync(string id, ReservationLog log)
         {
-            await _collection.ReplaceOneAsync(r => r.Id == id, log);
+            var filter = Builders<ReservationLog>.Filter.Eq(r => r.Id, id);
+            var result = await _collection.ReplaceOneAsync(filter, log);
+            
+            if (result.MatchedCount == 0)
+            {
+                Console.WriteLine($"[ReservationLogRepo] WARNING: ReplaceOneAsync failed to match document with ID: {id}");
+            }
+            else
+            {
+                Console.WriteLine($"[ReservationLogRepo] Updated reservation ID: {id}. Matched: {result.MatchedCount}, Modified: {result.ModifiedCount}");
+            }
         }
     }
 }

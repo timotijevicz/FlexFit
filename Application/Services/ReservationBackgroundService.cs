@@ -35,6 +35,7 @@ namespace FlexFit.Application.Services
             var now = DateTime.UtcNow;
             
             var expiredReservations = await uow.Reservations.GetExpiredReservationsAsync(now);
+            Console.WriteLine($"[ProcessNoShowsAsync] Found {expiredReservations.Count()} expired reservations at {now}");
 
             foreach (var reservation in expiredReservations)
             {
@@ -42,11 +43,11 @@ namespace FlexFit.Application.Services
                 {
                     reservation.Status = "NoShow";
                     await uow.Reservations.UpdateAsync(reservation);
-                    // No need for uow.SaveAsync() here as UpdateAsync should handle it for MongoDB
-                    // and its internal SQL sync.
+                    Console.WriteLine($"[ProcessNoShowsAsync] Updated reservation {reservation.Id} to NoShow");
 
                     if (reservation.Id != null)
                     {
+                        Console.WriteLine($"[ProcessNoShowsAsync] Sending ProcessNoShowPenaltyCommand for reservation {reservation.Id}");
                         await mediator.Send(new ProcessNoShowPenaltyCommand(reservation.Id));
                     }
                 }

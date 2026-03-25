@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace FlexFit.Domain.Models
 {
     public class PenaltyPoint
@@ -6,6 +8,7 @@ namespace FlexFit.Domain.Models
         public int MemberId { get; set; }
         public Member Member { get; set; }
         public string Description { get; set; }
+        [JsonPropertyName("date")]
         public DateTime Date { get; set; }
         public bool IsCanceled { get; set; } = false;
         public string? CancelReason { get; set; }

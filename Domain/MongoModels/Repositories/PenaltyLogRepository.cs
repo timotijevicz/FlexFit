@@ -16,7 +16,8 @@ namespace FlexFit.Domain.MongoModels.Repositories
 
         public async Task<PenaltyLog?> GetByIdAsync(string id)
         {
-            return await _collection.Find(p => p.Id == id).FirstOrDefaultAsync();
+            var filter = Builders<PenaltyLog>.Filter.Eq(p => p.Id, id);
+            return await _collection.Find(filter).FirstOrDefaultAsync();
         }
 
         public async Task AddAsync(PenaltyLog log)
@@ -52,7 +53,8 @@ namespace FlexFit.Domain.MongoModels.Repositories
 
         public async Task UpdateAsync(string id, PenaltyLog log)
         {
-            await _collection.ReplaceOneAsync(p => p.Id == id, log);
+            var filter = Builders<PenaltyLog>.Filter.Eq(p => p.Id, id);
+            await _collection.ReplaceOneAsync(filter, log);
         }
     }
 }

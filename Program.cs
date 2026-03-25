@@ -5,7 +5,7 @@ using FlexFit.Presentation.Middleware;
 using FlexFit.Domain.MongoModels.Repositories;
 using FlexFit.Infrastructure.Token;
 using FlexFit.Infrastructure.UnitOfWorkLayer;
-using FlexFit.Domain.Interfaces.Repositories;
+using FlexFit.Infrastructure.Repositories.Interfaces;
 using FlexFit.Infrastructure.Repositories;
 using FlexFit.Infrastructure.Repositories.Interfaces;
 using MediatR;

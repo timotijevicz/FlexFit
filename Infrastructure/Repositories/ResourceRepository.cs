@@ -1,4 +1,4 @@
-﻿using FlexFit.Infrastructure.Data;
+using FlexFit.Infrastructure.Data;
 using FlexFit.Domain.Models;
 using FlexFit.Infrastructure.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -8,10 +8,12 @@ namespace FlexFit.Infrastructure.Repositories
     public class ResourceRepository : IResourceRepository
     {
         private readonly AppDbContext _context;
+        private readonly IMemberGraphRepository _graphRepo;
 
-        public ResourceRepository(AppDbContext context)
+        public ResourceRepository(AppDbContext context, IMemberGraphRepository graphRepo)
         {
             _context = context;
+            _graphRepo = graphRepo;
         }
 
         public async Task<Resource> GetByIdAsync(int id) =>
@@ -52,6 +54,12 @@ namespace FlexFit.Infrastructure.Repositories
 
             await _context.Resources.AddAsync(resource);
             await _context.SaveChangesAsync();
+
+            try {
+                await _graphRepo.LinkResourceToGymAsync(resource.Id, resource.FitnessObjectId, resource.Type.ToString(), "Gym #" + resource.FitnessObjectId);
+            } catch (Exception ex) {
+                Console.WriteLine($"[ResourceRepository] Neo4j Sync Error: {ex.Message}");
+            }
             
             return resource;
         }

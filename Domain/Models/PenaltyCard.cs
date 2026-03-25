@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace FlexFit.Domain.Models
 {
     public class PenaltyCard
@@ -7,6 +9,7 @@ namespace FlexFit.Domain.Models
         public Member Member { get; set; }
         public int FitnessObjectId { get; set; }
         public FitnessObject FitnessObject { get; set; }
+        [JsonPropertyName("date")]
         public DateTime Date { get; set; } // Ovde gledamo onih 12h
         public decimal Price { get; set; }
         public string Reason { get; set; }

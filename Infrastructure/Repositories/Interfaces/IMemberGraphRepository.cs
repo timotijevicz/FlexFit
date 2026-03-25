@@ -1,4 +1,4 @@
-namespace FlexFit.Domain.Interfaces.Repositories
+namespace FlexFit.Infrastructure.Repositories.Interfaces
 {
     public interface IMemberGraphRepository
     {
@@ -6,7 +6,6 @@ namespace FlexFit.Domain.Interfaces.Repositories
         Task RecordReservationAsync(string memberId, int resourceId, string memberName = null, string resourceType = null);
         Task<IEnumerable<string>> GetRecommendedObjectsAsync(string memberId);
         
-        // New gym management methods
         Task AssignCardToMemberAsync(string memberId, string cardId, string cardName = null);
         Task RecordBookingAsync(string memberId, int resourceId, string bookingId = null);
         Task RecordEmployeeCheckAsync(string employeeId, string memberId, string employeeName = null);

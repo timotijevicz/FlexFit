@@ -6,7 +6,6 @@ namespace FlexFit.Domain.Models
         public int PenaltyPoints { get; set; }
  
         // public ICollection<Reservation> Reservations { get; set; }
-        // Removed SQL Penalty collections - now managed via Mongo PenaltyLogRepository
         // public ICollection<PenaltyPoint> PenaltyPointHistory { get; set; }
         // public ICollection<PenaltyCard> PenaltyCards { get; set; }
         public ICollection<SubscriptionCard> SubscriptionCards { get; set; } = new List<SubscriptionCard>();

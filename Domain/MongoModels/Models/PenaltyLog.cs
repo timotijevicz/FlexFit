@@ -1,5 +1,6 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using System.Text.Json.Serialization;
 
 namespace FlexFit.Domain.MongoModels.Models
 {
@@ -18,6 +19,7 @@ namespace FlexFit.Domain.MongoModels.Models
         public bool IsPaid { get; set; } = false;
         public bool IsCanceled { get; set; } = false;
         public string? CancelReason { get; set; }
-        public DateTime Timestamp { get; set; }
+        [JsonPropertyName("date")]
+        public DateTime Date { get; set; }
     }
 }
